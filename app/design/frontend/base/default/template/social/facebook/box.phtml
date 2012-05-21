@@ -1,0 +1,55 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2010 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+
+/** @var $this Social_Facebook_Block_Box */
+$actions = $this->getAllActions();
+?>
+<?php if (!empty($actions)): ?>
+    <?php foreach ($actions as $action): ?>
+        <?php if ($action['box'] == 0 || count($this->getFriendBox($action['action'])) < 1): ?>
+            <?php continue; ?>
+        <?php endif; ?>
+        <div class="facebookFriendsBox">
+            <div>
+                <?php if ($this->getCountOfUsers($action['action']) == 1): ?>
+                    <?php echo $this->__('1 user %ss this product', $this->escapeHtml($action['action'])); ?>
+                <?php else: ?>
+                    <?php echo $this->__('%s users %s this product', $this->getCountOfUsers($action['action']), $this->escapeHtml($action['action'])) ?>
+                <?php endif; ?>
+            </div>
+            <div style="clear:both;"></div>
+            <?php foreach($this->getFriendBox($action['action']) as $facebookId => $facebookName): ?>
+                <div class="facebookUser">
+                    <img border="0" src="http://graph.facebook.com/<?php echo $facebookId?>/picture" alt="<?php $this->escapeHtml($facebookName)?>" title="<?php $this->escapeHtml($facebookName)?>">
+                    <span title="<?php echo $this->escapeHtml($facebookName)?>"><?php echo $this->escapeHtml($facebookName)?></span>
+                </div>
+            <?php endforeach; ?>
+            <div style="clear:both;"></div>
+        </div>
+        <div class="facebookZeroBox"></div>
+    <?php endforeach; ?>
+    <div style="clear:both;"></div>
+<?php endif; ?>
