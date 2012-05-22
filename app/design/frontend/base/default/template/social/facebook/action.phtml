@@ -27,9 +27,14 @@
 /** @var $this Social_Facebook_Block_Action */
 $actions = $this->getAllActions();
 ?>
+<table cellspacing=0 cellpadding=0 border=0>
+<tr>
+<td class="facebookLeftStrip">
+</td>
+<td class="facebookRightBlock">
 <?php if (!empty($actions)): ?>
     <?php foreach ($actions as $action): ?>
         <a class="facebookBtn" href="<?php echo $this->getFacebookUrl($action['action']) ?>"><?php echo $this->escapeHtml($action['title']) ?></a></button>
     <?php endforeach; ?>
-    <div style="clear:both;"></div>
 <?php endif; ?>
+<div style="clear:both;"></div>

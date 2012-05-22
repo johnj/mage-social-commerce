@@ -119,6 +119,16 @@ class Social_Facebook_Helper_Data extends Mage_Core_Helper_Abstract
         return $count;
     }
 
+     /**
+     * Get XFabric URL
+     *
+     * @return string
+     */
+    public function getFabricURL()
+    {
+        return Mage::getStoreConfig(Social_Facebook_Model_Facebook::XML_PATH_FABRIC_URL);
+    }
+
     /**
      * Get Redirect Url fo Facebook Authorization
      *

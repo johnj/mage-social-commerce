@@ -33,23 +33,25 @@ $actions = $this->getAllActions();
             <?php continue; ?>
         <?php endif; ?>
         <div class="facebookFriendsBox">
-            <div>
+            <div class="facebookActionBanner">
                 <?php if ($this->getCountOfUsers($action['action']) == 1): ?>
-                    <?php echo $this->__('1 user %ss this product', $this->escapeHtml($action['action'])); ?>
+                    <?php echo $this->__('one of your friends <strong>%s</strong> this product', $this->escapeHtml($action['action'])); ?>
                 <?php else: ?>
-                    <?php echo $this->__('%s users %s this product', $this->getCountOfUsers($action['action']), $this->escapeHtml($action['action'])) ?>
+                    <?php echo $this->__('%s of your friends <strong>%s</strong> this product', $this->getCountOfUsers($action['action']), $this->escapeHtml($action['action'])) ?>
                 <?php endif; ?>
             </div>
             <div style="clear:both;"></div>
             <?php foreach($this->getFriendBox($action['action']) as $facebookId => $facebookName): ?>
                 <div class="facebookUser">
-                    <img border="0" src="http://graph.facebook.com/<?php echo $facebookId?>/picture" alt="<?php $this->escapeHtml($facebookName)?>" title="<?php $this->escapeHtml($facebookName)?>">
+                    <a href="https://www.facebook.com/<?php echo $facebookId?>" target="_blank">
+                    <img border="0" src="http://graph.facebook.com/<?php echo $facebookId?>/picture" alt="<?php $this->escapeHtml($facebookName)?>" title="<?php $this->escapeHtml($facebookName)?>" class="facebookUserImg">
                     <span title="<?php echo $this->escapeHtml($facebookName)?>"><?php echo $this->escapeHtml($facebookName)?></span>
+                    </a>
                 </div>
             <?php endforeach; ?>
-            <div style="clear:both;"></div>
         </div>
-        <div class="facebookZeroBox"></div>
     <?php endforeach; ?>
-    <div style="clear:both;"></div>
 <?php endif; ?>
+</td>
+</tr>
+</table>

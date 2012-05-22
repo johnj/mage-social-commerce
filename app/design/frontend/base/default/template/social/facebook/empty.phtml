@@ -31,7 +31,7 @@
 </div>
 
 <?php if ($this->getShowSumm() != Social_Facebook_Block_Start::FACEBOOK_BLOCK_NO_TEXT): ?>
-    <div style="padding-bottom:10px;">
+    <div class="facebookNotConnected">
         <span class="fb_image"></span> <span><?php echo $this->__('%s people own or want this.', $this->getPeopleCount()) ?>
         <?php if ($this->getShowSumm() == Social_Facebook_Block_Start::FACEBOOK_BLOCK_START_CONNECT): ?>
             <a href="<?php echo $this->getConnectUrl()?>"><?php echo $this->__('Connect') ?></a> <?php echo $this->__('to see how many are friends.') ?>

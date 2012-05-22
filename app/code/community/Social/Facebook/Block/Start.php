@@ -53,11 +53,6 @@ class Social_Facebook_Block_Start extends Mage_Core_Block_Template
             Mage::getModel('social_facebook/facebook')->getCountByProduct($product->getId())
         );
 
-        try {
-        $msg = new Xcom_Xfabric_Model_Message(array());
-        } catch(Exception $E) { var_dump($E); }
-        var_dump($msg);
-
         if (!$accessToken) {
             $this->setShowSumm(Social_Facebook_Block_Start::FACEBOOK_BLOCK_START_CONNECT);
             $this->setConnectUrl(Mage::helper('social_facebook')->getRedirectUrl($product));

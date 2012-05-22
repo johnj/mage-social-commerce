@@ -44,6 +44,9 @@ class Social_Facebook_Model_Facebook extends Mage_Core_Model_Abstract
     const XML_PATH_APP_OBJECT_TYPE      = 'facebook/config/otype';
     const XML_PATH_APP_USER_COUNT       = 3;
     const XML_PATH_APP_ACTIONS          = 'facebook/config/action';
+    const XML_PATH_FABRIC_URL           = 'facebook/config/fabric_url';
+    const XML_PATH_FABRIC_TOKEN         = 'facebook/config/fabric_token';
+    const XML_PATH_CAP_TOKEN            = 'facebook/config/cap_token';
 
     protected $_accessToken     = false;
 
@@ -252,7 +255,7 @@ class Social_Facebook_Model_Facebook extends Mage_Core_Model_Abstract
         } catch (Exception $e) {
             $action = Mage::getSingleton('core/session')->getData('facebook_action');
             Mage::getSingleton('core/session')->addError(
-                 Mage::helper('social_facebook')->__('Cannot Make "%s" Action. Please, try later.', $action)
+                 Mage::helper('social_facebook')->__('Could not create the "%s" action...can you try again?', $action)
             );
             Mage::logException($e);
         }
@@ -310,5 +313,9 @@ class Social_Facebook_Model_Facebook extends Mage_Core_Model_Abstract
         }
 
         return $user;
+    }
+
+    public function sendXcomMsg($productData) {
+        //if(class_exists(
     }
 }

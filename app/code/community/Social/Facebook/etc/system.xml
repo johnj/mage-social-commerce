@@ -90,6 +90,13 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
                         </otype>
+                        <fabric_url translate="label" module="social_facebook">
+                            <label>X.Commerce Fabric URL</label>
+                            <frontend_type>text</frontend_type>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </fabric_url>
                         <action translate="comment">
                             <label>Actions Settings</label>
                             <frontend_model>social_facebook/adminhtml_facebuttons</frontend_model>

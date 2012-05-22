@@ -50,8 +50,13 @@ class Social_Facebook_Block_Box extends Mage_Core_Block_Template
      */
     public function getFriendBox($action)
     {
-        return Mage::getModel('social_facebook/facebook')->getLinkedFriends($this->getFacebookId(),
+        $curr_fbId = $this->getFacebookId();
+        $friends = Mage::getModel('social_facebook/facebook')->getLinkedFriends($curr_fbId,
             $this->getProductId(), $action);
+        foreach($friends as $fbId => $fbName) {
+            if($fbId==$curr_fbId) { $friends[$fbId] = 'you';break; }
+        }
+        return $friends;
     }
 
     /**

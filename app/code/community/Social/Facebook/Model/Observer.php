@@ -53,12 +53,15 @@ class Social_Facebook_Model_Observer
         /** @var $facebookModel Social_Facebook_Model_Facebook */
         $facebookModel  = Mage::getSingleton('social_facebook/facebook');
 
+        $product = Mage::getModel('catalog/product')->load($productId);
+        $productData = $product->getData();
+
         if ($facebookAction) {
             $result = $facebookModel->sendFacebookAction();
+            $session->unsetData('facebook_action');
 
             if (!empty($result)) {
                 $session->addSuccess(Mage::helper('social_facebook')->__('I %s this product', $facebookAction));
-                $session->unsetData('facebook_action');
 
                 $user = $facebookModel->getFacebookUser();
                 if ($user) {
