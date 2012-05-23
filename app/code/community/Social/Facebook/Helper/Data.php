@@ -74,7 +74,7 @@ class Social_Facebook_Helper_Data extends Mage_Core_Helper_Abstract
     }
 
      /**
-     * Get Facebook App Name
+     * Get Facebook Object Type (usually product)
      *
      * @return string
      */
@@ -84,7 +84,37 @@ class Social_Facebook_Helper_Data extends Mage_Core_Helper_Abstract
     }
 
      /**
-     * Get Facebook App Name
+     * Get XFabric URL
+     *
+     * @return string
+     */
+    public function getXcomFabricURL()
+    {
+        return Mage::getStoreConfig(Social_Facebook_Model_Facebook::XML_PATH_FABRIC_URL);
+    }
+
+     /**
+     * Get XFabric Token
+     *
+     * @return string
+     */
+    public function getXcomFabricToken()
+    {
+        return Mage::getStoreConfig(Social_Facebook_Model_Facebook::XML_PATH_FABRIC_TOKEN);
+    }
+
+     /**
+     * Get the capability token
+     *
+     * @return string
+     */
+    public function getXcomCapToken()
+    {
+        return Mage::getStoreConfig(Social_Facebook_Model_Facebook::XML_PATH_CAP_TOKEN);
+    }
+
+     /**
+     * Get Facebook Actions
      *
      * @return string
      */
@@ -117,16 +147,6 @@ class Social_Facebook_Helper_Data extends Mage_Core_Helper_Abstract
             $count = Social_Facebook_Model_Facebook::XML_PATH_APP_USER_COUNT;
         }
         return $count;
-    }
-
-     /**
-     * Get XFabric URL
-     *
-     * @return string
-     */
-    public function getFabricURL()
-    {
-        return Mage::getStoreConfig(Social_Facebook_Model_Facebook::XML_PATH_FABRIC_URL);
     }
 
     /**

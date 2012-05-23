@@ -106,6 +106,43 @@ class Social_Facebook_Model_Api extends Varien_Object
     }
 
     /**
+     * send message to Xfabric
+     *
+     * @param object $params
+     * @throws Mage_Core_Exception
+     * @return boolean
+     */
+    public function makeXcomRequest($topic, $object, $schema_file, $debug=false)
+    {
+        $http_code = 0;
+        try {
+            if(!class_exists('Xcom')) {
+                Mage::throwException(Mage::helper('social_facebook')->__('The Xcom class is not available, please install and enable the X.commerce PHP5 extension'));
+            }
+
+            $xcom = new Xcom(Mage::helper('social_facebook')->getXcomFabricURL(), Mage::helper('social_facebook')->getXcomFabricToken(), Mage::helper('social_facebook')->getXcomCapToken());
+
+            if($debug) { $xcom->__debug = true; }
+
+            $file_location = dirname(__FILE__) . "/../etc/" . $schema_file;
+
+            if(!is_readable($file_location)) {
+                Mage::throwException(Mage::helper('social_facebook')->__('Unable to load schema file: ') . $file_location);
+            }
+
+            $http_code = $xcom->send($topic, $object, file_get_contents($file_location));
+        } catch (Exception $e) {
+            Mage::logException($e);
+        }
+
+        if (empty($http_code) || $http_code!=200) {
+            Mage::throwException(Mage::helper('social_facebook')->__('Error sending message to fabric, HTTP CODE: ') . $http_code);
+        }
+
+        return $http_code;
+    }
+
+    /**
      * Make Request To Facebook
      *
      * @param array $params

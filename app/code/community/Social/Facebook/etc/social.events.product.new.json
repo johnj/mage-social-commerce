@@ -1,0 +1,11 @@
+{
+    "type" : "record",
+        "name" : "CreateSocialEventForProduct",
+        "fields" : [ {
+            "name" : "product_info",
+            "type" : "string"
+        }
+    ],
+    "topic" : "/social/events/product/new",
+    "version" : "1.0.0"
+}
