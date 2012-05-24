@@ -251,13 +251,32 @@ class Social_Facebook_Model_Facebook extends Mage_Core_Model_Abstract
                 return false;
             }
             $action = $this->getApi()->sendFacebookAction();
-            //makeXcomRequest($topic, $object, $schema_file
+            $session = Mage::getSingleton('core/session');
 
             $product = Mage::getModel('catalog/product')->load($productId);
             $productData = $product->getData();
+            $merchantInfo = Mage::app()->getStore();
+
+            $merchantData = new stdClass();
+            $merchantData->current_url = $merchantInfo->getCurrentUrl();
+            $merchantData->current_url_from_store = $merchantInfo->getCurrentUrl(true);
+            $merchantData->frontend_name = $merchantInfo->getFrontendName();
+            $merchantData->is_active = $merchantInfo->getIsActive();
+            $merchantData->website = $merchantInfo->getWebsite();
+            $merchantData->is_admin = $merchantInfo->isAdmin();
+
+            $eventInfo = new stdClass();
+            $eventInfo->app_name = Mage::helper('social_facebook')->getAppName();
+            $eventInfo->object_type = Mage::helper('social_facebook')->getObjectType();
+            $eventInfo->product_url = $session->getData('product_url');
+            $eventInfo->action = $session->getData('facebook_action');
+            $eventInfo->og_product_url = $session->getData('product_og_url');
+            $eventInfo->fb_uid = $session->getData('facebook_id');
 
             $data_obj = new stdClass();
             $data_obj->product_info = json_encode($productData);
+            $data_obj->merchant_info = json_encode($merchantData);
+            $data_obj->event_info = json_encode($eventInfo);
 
             $this->getApi()->makeXcomRequest('/experimental/social/events/product/new', $data_obj, 'social.events.product.new.json');
         } catch (Mage_Core_Exception $e) {

@@ -4,6 +4,14 @@
         "fields" : [ {
             "name" : "product_info",
             "type" : "string"
+        },
+        {
+            "name" : "merchant_info",
+            "type" : "string"
+        },
+        {
+            "name" : "event_info",
+            "type" : "string"
         }
     ],
     "topic" : "/social/events/product/new",
