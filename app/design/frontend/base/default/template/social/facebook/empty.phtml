@@ -25,6 +25,32 @@
  */
 
 /** @var $this Social_Facebook_Block_Start */
+
+$actions = Mage::helper('social_facebook')->getAllActions();
+$peopleCount = $this->getPeopleCount(); 
+$actionArray = array();
+$action_string = "";
+foreach ($actions as $action) {
+    if($peopleCount<2) { $actionArray[] = $action['action'] . 's'; } else {
+        $actionArray[] = $action['action'];
+    }
+}
+
+$l = sizeof($actionArray);
+if($l==2) { $action_string = $actionArray[0] . " or " . $actionArray[1]; }
+else if($l==1) {
+    $action_string = $actionArray[0];
+} else {
+    for($i=0; $i<$l; $i++) {
+        $delim = "";
+        if($i==($l-2)) {
+            $delim = " or ";
+        } else if($i<($l-1)) {
+            $delim = ", ";
+        }
+        $action_string .= $actionArray[$i] . $delim;
+    }
+}
 ?>
 <div>
     <?php echo $this->getChildHtml('social_facebook_action'); ?>
@@ -32,7 +58,7 @@
 
 <?php if ($this->getShowSumm() != Social_Facebook_Block_Start::FACEBOOK_BLOCK_NO_TEXT): ?>
     <div class="facebookNotConnected">
-        <span class="fb_image"></span> <span><?php echo $this->__('%s people own or want this.', $this->getPeopleCount()) ?>
+        <span class="fb_image"></span> <span><?php echo $this->__('%s %s %s this product.', $peopleCount, $peopleCount > 1 ? "people" : "person", $action_string); ?>
         <?php if ($this->getShowSumm() == Social_Facebook_Block_Start::FACEBOOK_BLOCK_START_CONNECT): ?>
             <a href="<?php echo $this->getConnectUrl()?>"><?php echo $this->__('Connect') ?></a> <?php echo $this->__('to see how many are friends.') ?>
         <?php else: ?>
