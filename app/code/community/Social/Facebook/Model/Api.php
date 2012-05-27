@@ -37,6 +37,7 @@ class Social_Facebook_Model_Api extends Varien_Object
     const URL_GRAPH_OAUTH_ACCESS_TOKEN  = 'https://graph.facebook.com/oauth/access_token';
     const URL_GRAPH_FACEBOOK_ABOUT_ME   = 'https://graph.facebook.com/me/';
     const URL_GRAPH_FACEBOOK_ME_FRIENDS = 'https://graph.facebook.com/me/friends';
+    const URL_GRAPH_FACEBOOK_OBJECT_ID = 'https://graph.facebook.com/';
 
     protected $_accessToken     = false;
     protected $_productUrl      = false;
@@ -171,6 +172,14 @@ class Social_Facebook_Model_Api extends Varien_Object
         }
 
         if (!empty($result) && (!empty($result->error) || !empty($result->error->message))) {
+            if($result->error->code=="3501") {
+                 /*
+                  *user already associated with this action/product 
+                  */
+                $m = array();
+                preg_match('/Original Action ID: (\d+)/i', $result->error->message, $m);
+                return $m[1];
+            }
             Mage::throwException(Mage::helper('social_facebook')->__('Facebook error: ') . $result->error->message);
         }
 
@@ -214,6 +223,12 @@ class Social_Facebook_Model_Api extends Varien_Object
      */
     public function getFacebookUser()
     {
+        static $_authInfo = false;
+
+        if(!empty($_authInfo)) {
+            return $_authInfo;
+        }
+
         if (empty($this->_accessToken)) {
             $this->getAccessToken();
         }
@@ -230,10 +245,12 @@ class Social_Facebook_Model_Api extends Varien_Object
 
         $result = json_decode($response->getBody());
 
-        return array(
+        $_authInfo = array(
             'facebook_id'   => $result->id,
             'facebook_name' => $result->name
         );
+
+        return $_authInfo;
     }
 
     /**
@@ -255,13 +272,16 @@ class Social_Facebook_Model_Api extends Varien_Object
         }
 
         $response = $this->makeFacebookRequest(
-            array(
-                'access_token'  => $this->_accessToken,
-                $objectType     => $this->_productOgUrl
-            ),
-            Social_Facebook_Model_Api::URL_GRAPH_FACEBOOK_ABOUT_ME . $appName . ':' . $this->_facebookAction,
+            array(),
+            Social_Facebook_Model_Api::URL_GRAPH_FACEBOOK_ABOUT_ME . $appName . ':' . $this->_facebookAction . '?access_token=' . urlencode($this->_accessToken) . "&$objectType=". urlencode($this->_productOgUrl),
             Zend_Http_Client::POST
         );
+
+        if(!is_object($response)) {
+            $action = new stdClass();
+            $action->id = $response;
+            return $action;
+        }
 
         return json_decode($response->getBody());
     }

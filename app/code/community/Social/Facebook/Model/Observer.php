@@ -52,20 +52,19 @@ class Social_Facebook_Model_Observer
 
         /** @var $facebookModel Social_Facebook_Model_Facebook */
         $facebookModel  = Mage::getSingleton('social_facebook/facebook');
+        $user = $facebookModel->getFacebookUser();
 
         if ($facebookAction) {
-            $result = $facebookModel->sendFacebookAction($productId);
-            $session->unsetData('facebook_action');
+            $facebookUser = $facebookModel->loadUserByActionId($facebookAction, $user['facebook_id'], $productId);
 
-            if (!empty($result)) {
-                $session->addSuccess(Mage::helper('social_facebook')->__('I %s this product', $facebookAction));
+            if(!$facebookUser) {
+                $result = $facebookModel->sendFacebookAction($facebookAction, $user['facebook_id'], $productId);
+                $session->unsetData('facebook_action');
 
-                $user = $facebookModel->getFacebookUser();
-                if ($user) {
-                    $facebookUser = $facebookModel->loadUserByActionId($facebookAction, $user['facebook_id'],
-                        $productId);
+                if (!empty($result)) {
+                    $session->addSuccess(Mage::helper('social_facebook')->__('I %s this product!', $facebookAction));
 
-                    if (!$facebookUser) {
+                    if ($user) {
                         $data = array(
                             'facebook_id'       => $user['facebook_id'],
                             'facebook_action'   => $facebookAction,
@@ -80,16 +79,16 @@ class Social_Facebook_Model_Observer
                 Mage::app()->getResponse()->setRedirect($productUrl);
                 Mage::app()->getResponse()->sendResponse();
                 exit();
+            } else {
+                $session->addSuccess(Mage::helper('social_facebook')->__('I already %s this product!', $facebookAction));
+                $session->unsetData('facebook_action');
             }
         }
 
-        if (!isset($facebookId)) {
-            $user = $facebookModel->getFacebookUser();
-            if ($user) {
-                $facebookId = $user['facebook_id'];
-            }
-
+        if ($user) {
+            $facebookId = $user['facebook_id'];
         }
+
         if (isset($facebookId)) {
             $this->_cacheFriends($facebookId);
         }

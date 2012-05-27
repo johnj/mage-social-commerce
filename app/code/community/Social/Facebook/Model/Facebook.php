@@ -243,13 +243,17 @@ class Social_Facebook_Model_Facebook extends Mage_Core_Model_Abstract
      *
      * @return mixed
      */
-    public function sendFacebookAction($productId)
+    public function sendFacebookAction($action, $fb_uid, $productId)
     {
         $action = "";
         try {
             if (!$this->getAccessToken()) {
                 return false;
             }
+
+            $facebookUser = $this->loadUserByActionId($action, $fb_uid, $productId);
+            if($facebookUser) { return true; }
+
             $action = $this->getApi()->sendFacebookAction();
             $session = Mage::getSingleton('core/session');
 
@@ -272,6 +276,10 @@ class Social_Facebook_Model_Facebook extends Mage_Core_Model_Abstract
             $eventInfo->action = $session->getData('facebook_action');
             $eventInfo->og_product_url = $session->getData('product_og_url');
             $eventInfo->fb_uid = $session->getData('facebook_id');
+            $eventInfo->fb_action_id = $action->id;
+
+            $req = $this->getApi()->makeFacebookRequest(array('access_token' => $this->getAccessToken()), Social_Facebook_Model_Api::URL_GRAPH_FACEBOOK_OBJECT_ID . (string)$action->id, Zend_Http_Client::GET);
+            $eventInfo->fb_action_info = $req->getBody();
 
             $data_obj = new stdClass();
             $data_obj->product_info = json_encode($productData);
