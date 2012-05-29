@@ -44,8 +44,7 @@ $table = $installer->getConnection()
     ->addColumn('facebook_name', Varien_Db_Ddl_Table::TYPE_TEXT, 100, array(
         'nullable'  => false,
         ), 'Facebook User Name')
-    ->addColumn('facebook_action', Varien_Db_Ddl_Table::TYPE_SMALLINT, 5, array(
-        'unsigned'  => true,
+    ->addColumn('facebook_action', Varien_Db_Ddl_Table::TYPE_TEXT, 100, array(
         'nullable'  => false,
         ), 'User Action')
     ->addColumn('item_id', Varien_Db_Ddl_Table::TYPE_INTEGER, null, array(

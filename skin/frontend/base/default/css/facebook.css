@@ -40,14 +40,13 @@
     line-height: 14px;
     white-space: nowrap;
     color: #4F6AA3;
-    cursor: pointer;
     text-decoration: none;
     width: 50px;
     float: left;
     margin-bottom:0;
 }
 
-.facebookBtn:hover {
+.facebookBtn:hover, .facebookBtnSelected {
 background-color:#4F6AA3;
 color:#FCFCFE;
 }
