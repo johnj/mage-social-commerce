@@ -78,12 +78,13 @@ class Social_Facebook_Model_Observer
                 }
                 Mage::app()->getResponse()->setRedirect($productUrl);
                 Mage::app()->getResponse()->sendResponse();
+                $session->unsetData('facebook_action');
                 exit();
             } else {
                 $session->addSuccess(Mage::helper('social_facebook')->__('I already %s this product!', $facebookAction));
-                $session->unsetData('facebook_action');
             }
         }
+        $session->unsetData('facebook_action');
 
         if ($user) {
             $facebookId = $user['facebook_id'];

@@ -51,6 +51,12 @@ else if($l==1) {
         $action_string .= $actionArray[$i] . $delim;
     }
 }
+
+$count_str = "No one ";
+if($peopleCount>1) {
+$count_str = $peopleCount . " ";
+$count_str .= $peopleCount > 1 ? "people" : "person";
+}
 ?>
 <div>
     <?php echo $this->getChildHtml('social_facebook_action'); ?>
@@ -58,11 +64,11 @@ else if($l==1) {
 
 <?php if ($this->getShowSumm() != Social_Facebook_Block_Start::FACEBOOK_BLOCK_NO_TEXT): ?>
     <div class="facebookNotConnected">
-        <span class="fb_image"></span> <span><?php echo $this->__('%s %s %s this product.', $peopleCount, $peopleCount > 1 ? "people" : "person", $action_string); ?>
+        <span class="fb_image"></span> <span><?php echo $this->__('%s %s this product.', $count_str, $action_string); ?>
         <?php if ($this->getShowSumm() == Social_Facebook_Block_Start::FACEBOOK_BLOCK_START_CONNECT): ?>
             <a href="<?php echo $this->getConnectUrl()?>"><?php echo $this->__('Connect') ?></a> <?php echo $this->__('to see how many are friends.') ?>
         <?php else: ?>
-            <?php echo $this->__('Be the first of your friends.') ?>
+            <?php echo $this->__('Be the first of your friends!') ?>
         <?php endif; ?>
         </span>
     </div>

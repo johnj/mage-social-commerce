@@ -183,7 +183,7 @@ class Social_Facebook_Model_Api extends Varien_Object
             Mage::throwException(Mage::helper('social_facebook')->__('Facebook error: ') . $result->error->message);
         }
 
-        return $client->request();
+        return $response;
     }
 
     /**
