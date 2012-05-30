@@ -1,0 +1,19 @@
+{
+    "type" : "record",
+        "name" : "TenantRelationshipCreated",
+        "fields" : [ {
+            "name" : "tenantPseudonym",
+            "type" : "string"
+        },
+        {
+            "name" : "bearerToken",
+            "type" : "string"
+        },
+        {
+            "name" : "tenantName",
+            "type" : "string"
+        }
+    ],
+    "topic" : "/system/tenant/relationship/created",
+    "version" : "1.0.0"
+}

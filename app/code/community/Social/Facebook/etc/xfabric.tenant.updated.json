@@ -1,0 +1,19 @@
+{
+    "type" : "record",
+        "name" : "XFabricTenantUpdated",
+        "fields" : [ {
+            "name" : "tenantPseudonym",
+            "type" : "string"
+        },
+        {
+            "name" : "bearerToken",
+            "type" : "string"
+        },
+        {
+            "name" : "tenantName",
+            "type" : "string"
+        }
+    ],
+    "topic" : "/xfabric/tenant/updated",
+    "version" : "1.0.0"
+}
