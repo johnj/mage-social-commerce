@@ -258,6 +258,17 @@ class Social_Facebook_Model_Facebook extends Mage_Core_Model_Abstract
 
             $product = Mage::getModel('catalog/product')->load($productId);
             $productData = $product->getData();
+
+            $categories = $product->getCategoryIds();
+            $category_data = array();
+
+            if(!empty($categories)) {
+                foreach($categories as $category_id) {
+                    $category = Mage::getModel('catalog/category')->load($category_id);
+                    $category_data[] = $category->getData();
+                }
+            }
+
             $merchantInfo = Mage::app()->getStore();
 
             $merchantData = new stdClass();
@@ -276,6 +287,8 @@ class Social_Facebook_Model_Facebook extends Mage_Core_Model_Abstract
             $eventInfo->og_product_url = $session->getData('product_og_url');
             $eventInfo->fb_uid = $session->getData('facebook_id');
             $eventInfo->fb_action_id = $action->id;
+
+            $productData["product_categories"] = $category_data;
 
             $req = $this->getApi()->makeFacebookRequest(array('access_token' => $this->getAccessToken()), Social_Facebook_Model_Api::URL_GRAPH_FACEBOOK_OBJECT_ID . (string)$action->id, Zend_Http_Client::GET);
             $eventInfo->fb_action_info = $req->getBody();
