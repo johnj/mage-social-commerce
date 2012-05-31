@@ -121,7 +121,7 @@ class Social_Facebook_Model_Api extends Varien_Object
                 Mage::throwException(Mage::helper('social_facebook')->__('The Xcom class is not available, please install and enable the X.commerce PHP5 extension'));
             }
 
-            $xcom = new Xcom(Mage::helper('social_facebook')->getXcomFabricURL(), Mage::helper('social_facebook')->getXcomFabricToken(), Mage::helper('social_facebook')->getXcomCapToken());
+            $xcom = new Xcom(Mage::helper('social_facebook')->getXcomFabricURL(), '', Mage::helper('social_facebook')->getXcomCapToken());
 
             if($debug) { $xcom->__debug = true; }
 

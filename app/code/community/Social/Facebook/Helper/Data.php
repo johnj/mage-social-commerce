@@ -94,16 +94,6 @@ class Social_Facebook_Helper_Data extends Mage_Core_Helper_Abstract
     }
 
      /**
-     * Get XFabric Token
-     *
-     * @return string
-     */
-    public function getXcomFabricToken()
-    {
-        return Mage::getStoreConfig(Social_Facebook_Model_Facebook::XML_PATH_FABRIC_TOKEN);
-    }
-
-     /**
      * Get the capability token
      *
      * @return string
