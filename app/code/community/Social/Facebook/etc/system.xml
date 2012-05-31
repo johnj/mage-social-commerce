@@ -94,36 +94,18 @@
                             <show_in_store>0</show_in_store>
                             <validate>required-entry</validate>
                         </otype>
-                        <fabric_url translate="label" module="social_facebook">
-                            <validate>validate-url required-entry</validate>
-                            <label>X.Commerce Fabric URL</label>
-                            <frontend_type>text</frontend_type>
+                        <fabric_json translate="label" module="social_facebook">
+                            <validate>required-entry</validate>
+                            <label>X.Commerce Authorization JSON</label>
+                            <frontend_type>textarea</frontend_type>
                             <show_in_default>1</show_in_default>
                             <show_in_website>0</show_in_website>
                             <show_in_store>0</show_in_store>
+                            <required>1</required>
                             <comment>
-                                Sandbox URL: https://api.sandbox.x.com/fabric&lt;br&gt;
-                                Production URL: https://api.x.com/fabric
+                                Copy and paste the JSON authorization file into this text area. You can get an authorization file at https://devportal.x.com/merchant_onboarding/?step=1
                             </comment>
-                        </fabric_url>
-                        <fabric_token translate="label" module="social_facebook">
-                            <validate>required-entry</validate>
-                            <label>X.Commerce Fabric Token</label>
-                            <frontend_type>text</frontend_type>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>0</show_in_website>
-                            <show_in_store>0</show_in_store>
-                            <required>1</required>
-                        </fabric_token>
-                        <cap_token translate="label" module="social_facebook">
-                            <validate>required-entry</validate>
-                            <label>X.Commerce Capability Token</label>
-                            <frontend_type>text</frontend_type>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>0</show_in_website>
-                            <show_in_store>0</show_in_store>
-                            <required>1</required>
-                        </cap_token>
+                        </fabric_json>
                         <action translate="comment">
                             <label>Actions Settings</label>
                             <frontend_model>social_facebook/adminhtml_facebuttons</frontend_model>
