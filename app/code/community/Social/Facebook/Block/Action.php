@@ -33,9 +33,20 @@ class Social_Facebook_Block_Action extends Mage_Core_Block_Template
         parent::_construct();
 
         $product = Mage::registry('product');
-        $this->setProductId($product->getId());
+        $product_id = $product->getId();
+        $this->setProductId($product_id);
 
-        $this->setAllActions(Mage::helper('social_facebook')->getAllActions());
+        $session        = Mage::getSingleton('core/session');
+        $user = $session->getData('facebook_user');
+        $actions = Mage::helper('social_facebook')->getAllActions();
+
+        if($user) {
+            $facebookModel = Mage::getSingleton('social_facebook/facebook');
+            foreach($actions as $aid => $attrs) {
+                $actions[$aid]['selected'] = is_array($facebookModel->loadUserByActionId($attrs['action'], $user['facebook_id'], $product_id));
+            }
+        }
+        $this->setAllActions($actions);
 
         return $this;
     }

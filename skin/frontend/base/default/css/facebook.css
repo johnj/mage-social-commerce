@@ -31,7 +31,7 @@
 }
 .facebookBtn {
     margin:1px 10px 10px 0;
-    padding:4px 5px 4px 6px;
+    padding:7px 10px 7px 10px;
     text-align:center;
     background-color:#ECEEF5;
     border: 1px solid #CAD4E7;
@@ -41,7 +41,6 @@
     white-space: nowrap;
     color: #4F6AA3;
     text-decoration: none;
-    width: 50px;
     float: left;
     margin-bottom:0;
 }

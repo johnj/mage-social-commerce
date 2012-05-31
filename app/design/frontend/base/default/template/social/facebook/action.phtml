@@ -32,9 +32,16 @@ $actions = $this->getAllActions();
 <td class="facebookLeftStrip">
 </td>
 <td class="facebookRightBlock">
-<?php if (!empty($actions)): ?>
-    <?php foreach ($actions as $action): ?>
-        <a class="facebookBtn" href="<?php echo $this->getFacebookUrl($action['action']) ?>"><?php echo $this->escapeHtml($action['title']) ?></a></button>
-    <?php endforeach; ?>
-<?php endif; ?>
+<?php if (!empty($actions)) {
+    foreach ($actions as $action) {
+        $class = 'facebookBtn';
+        $url = $this->getFacebookUrl($action['action']);
+        if(!empty($action["selected"])) {
+            $class = 'facebookBtn facebookBtnSelected';
+            $url = "javascript:void(0);";
+        }
+        echo "<a class=\"{$class}\" href=\"". $url ."\">". $this->escapeHtml($action['title']) ."</a>";
+    }
+}
+?>
 <div style="clear:both;"></div>
