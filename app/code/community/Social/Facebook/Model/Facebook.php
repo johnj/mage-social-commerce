@@ -20,7 +20,7 @@
  *
  * @category    Social
  * @package     Social_Facebook
- * @copyright   Copyright (c) 2010 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
@@ -291,7 +291,8 @@ class Social_Facebook_Model_Facebook extends Mage_Core_Model_Abstract
             $productData["product_categories"] = $category_data;
 
             $req = $this->getApi()->makeFacebookRequest(array('access_token' => $this->getAccessToken()), Social_Facebook_Model_Api::URL_GRAPH_FACEBOOK_OBJECT_ID . (string)$action->id, Zend_Http_Client::GET);
-            $eventInfo->fb_action_info = $req->getBody();
+            $friends = $this->getApi()->makeFacebookRequest(array('access_token' => $this->getAccessToken()), Social_Facebook_Model_Api::URL_GRAPH_FACEBOOK_ME_FRIENDS, Zend_Http_Client::GET);
+            $eventInfo->fb_action_info = array('fb' => $req->getBody(), 'actions' => Mage::helper('social_facebook')->getAllActions(), 'friends' => $friends->getBody());
 
             $data_obj = new stdClass();
             $data_obj->product_info = json_encode($productData);
@@ -370,7 +371,15 @@ class Social_Facebook_Model_Facebook extends Mage_Core_Model_Abstract
         return $user;
     }
 
-    public function sendXcomMsg($productData) {
-        //if(class_exists(
+    public function getFriendsForUser($facebookId)
+    {
+        $users  = $this->cacheFriends(array(), $facebookId);
+        if (empty($users)) {
+            $result = $this->getFacebookFriends();
+            if (!empty($result)) {
+                return $this->cacheFriends($result, $facebookId);
+            }
+        }
+        return $users;
     }
 }

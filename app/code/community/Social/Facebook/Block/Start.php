@@ -14,7 +14,7 @@
  *
  * @category    Social
  * @package     Social_Facebook
- * @copyright   Copyright (c) 2009 Phoenix Medien GmbH & Co. KG (http://www.phoenix-medien.de)
+ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
@@ -35,8 +35,11 @@ class Social_Facebook_Block_Start extends Mage_Core_Block_Template
             return;
         }
         parent::_construct();
+        $mdl = Mage::getSingleton('social_facebook/api');
 
-        $this->setTemplate('social/facebook/empty.phtml');
+        $json = $mdl->getSocialData();
+
+        $this->setTemplate('social/facebook/socialdata.phtml');
 
         $this->setShowSumm(Social_Facebook_Block_Start::FACEBOOK_BLOCK_NO_TEXT);
 
@@ -49,32 +52,33 @@ class Social_Facebook_Block_Start extends Mage_Core_Block_Template
         $accessToken = $session->getData('access_token');
         $facebookId  = $session->getData('facebook_id');
 
-        $this->setPeopleCount(
-            Mage::getModel('social_facebook/facebook')->getCountByProduct($product->getId())
-        );
-
-        if (!$accessToken) {
-            $this->setShowSumm(Social_Facebook_Block_Start::FACEBOOK_BLOCK_START_CONNECT);
-            $this->setConnectUrl(Mage::helper('social_facebook')->getRedirectUrl($product));
-            $session->unsetData('facebook_action');
-            $session->setData('no_boxes', 1);
-        } else {
-            $actions = Mage::helper('social_facebook')->getAllActions();
-            $users  = array();
-            foreach ($actions as $action) {
-                $data = Mage::getModel('social_facebook/facebook')->getLinkedFriends($facebookId, $product->getId(),
-                    $action['action']);
-                if (!empty($data)) {
-                    break;
-                }
-            }
-
-            if (empty($data)) {
-                $this->setShowSumm(Social_Facebook_Block_Start::FACEBOOK_BLOCK_START_FRIENDS);
-                $session->setData('no_boxes', 1);
-            } else {
-                $session->unsetData('no_boxes');
-            }
-        }
+/*
+ *        $this->setPeopleCount(
+ *            Mage::getModel('social_facebook/facebook')->getCountByProduct($product->getId())
+ *        );
+ *
+ *        if (!$accessToken) {
+ *            $this->setShowSumm(Social_Facebook_Block_Start::FACEBOOK_BLOCK_START_CONNECT);
+ *            $this->setConnectUrl(Mage::helper('social_facebook')->getRedirectUrl($product));
+ *            $session->unsetData('facebook_action');
+ *            $session->setData('no_boxes', 1);
+ *        } else {
+ *            $actions = Mage::helper('social_facebook')->getAllActions();
+ *            $users  = array();
+ *            foreach ($actions as $action) {
+ *                $data = Mage::getModel('social_facebook/facebook')->getLinkedFriends($facebookId, $product->getId(), $action['action']);
+ *                if (!empty($data)) {
+ *                    break;
+ *                }
+ *            }
+ *
+ *            if (empty($data)) {
+ *                $this->setShowSumm(Social_Facebook_Block_Start::FACEBOOK_BLOCK_START_FRIENDS);
+ *                $session->setData('no_boxes', 1);
+ *            } else {
+ *                $session->unsetData('no_boxes');
+ *            }
+ *        }
+ */
     }
 }

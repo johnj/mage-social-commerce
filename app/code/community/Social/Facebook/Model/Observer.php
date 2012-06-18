@@ -20,7 +20,7 @@
  *
  * @category    Social
  * @package     Social_Facebook
- * @copyright   Copyright (c) 2010 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
@@ -55,69 +55,30 @@ class Social_Facebook_Model_Observer
         $facebookModel  = Mage::getSingleton('social_facebook/facebook');
         $user = $facebookModel->getFacebookUser();
 
-        if ($facebookAction) {
-            $facebookUser = $facebookModel->loadUserByActionId($facebookAction, $user['facebook_id'], $productId);
-            $session->setData('facebook_user', $user);
+        $session->setData('facebook_user', $user);
 
-            if(!$facebookUser) {
-                $result = $facebookModel->sendFacebookAction($facebookAction, $user['facebook_id'], $productId);
-                $session->unsetData('facebook_action');
+        if($facebookAction) {
+            $result = $facebookModel->sendFacebookAction($facebookAction, $user['facebook_id'], $productId);
 
-                if (!empty($result)) {
-                    $session->addSuccess(Mage::helper('social_facebook')->__('I %s this product!', $facebookAction));
-
-                    if ($user) {
-                        $data = array(
-                            'facebook_id'       => $user['facebook_id'],
-                            'facebook_action'   => $facebookAction,
-                            'facebook_name'     => $user['facebook_name'],
-                            'item_id'           => $productId
-                        );
-
-                        $facebookModel->setData($data)
-                            ->save();
-                    }
-                }
-                Mage::app()->getResponse()->setRedirect($productUrl);
-                Mage::app()->getResponse()->sendResponse();
-                $session->unsetData('facebook_action');
-                exit();
-            } else {
-                $session->addSuccess(Mage::helper('social_facebook')->__('I already %s this product!', $facebookAction));
+            if (!empty($result)) {
+                $session->addSuccess(Mage::helper('social_facebook')->__('I %s this product!', $facebookAction));
             }
+
+            Mage::app()->getResponse()->setRedirect($productUrl);
+            Mage::app()->getResponse()->sendResponse();
+            $session->unsetData('facebook_action');
+            exit();
         }
-        $session->unsetData('facebook_action');
 
         if ($user) {
             $facebookId = $user['facebook_id'];
         }
 
         if (isset($facebookId)) {
-            $this->_cacheFriends($facebookId);
+            $facebookModel->getFriendsForUser($facebookId);
         }
 
         return $this;
     }
 
-    /**
-     * Cache Facebook Friends
-     *
-     * @param int $facebookId
-     * @return Social_Facebook_Model_Observer
-     */
-    protected function _cacheFriends($facebookId)
-    {
-        $facebookModel = Mage::getSingleton('social_facebook/facebook');
-
-        $users  = $facebookModel->cacheFriends(array(), $facebookId);
-
-        if (empty($users)) {
-            $result = $facebookModel->getFacebookFriends();
-            if (!empty($result)) {
-                $facebookModel->cacheFriends($result, $facebookId);
-            }
-        }
-
-        return $this;
-    }
 }

@@ -1,0 +1,11 @@
+{
+    "type" : "record",
+        "name" : "GetSocialEventsForProduct",
+        "fields" : [ {
+            "name" : "social",
+            "type" : "string"
+        }
+    ],
+    "topic" : "/social/events/product/fetch",
+    "version" : "1.0.0"
+}

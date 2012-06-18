@@ -20,7 +20,7 @@
  *
  * @category    Social
  * @package     Social_Facebook
- * @copyright   Copyright (c) 2010 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
@@ -88,8 +88,11 @@ class Social_Facebook_Helper_Data extends Mage_Core_Helper_Abstract
      *
      * @return string
      */
-    public function getXcomFabricURL()
+    public function getXcomFabricURL($sync=false)
     {
+        if($sync) {
+            return str_replace('/fabric', '/xbridge/invoke', Mage::getStoreConfig(Social_Facebook_Model_Facebook::XML_PATH_FABRIC_URL));
+        }
         return Mage::getStoreConfig(Social_Facebook_Model_Facebook::XML_PATH_FABRIC_URL);
     }
 
@@ -110,6 +113,11 @@ class Social_Facebook_Helper_Data extends Mage_Core_Helper_Abstract
      */
     public function getAllActions()
     {
+        static $actions = NULL;
+
+        if($actions)
+            return $actions;
+
         $actions = Mage::getStoreConfig(Social_Facebook_Model_Facebook::XML_PATH_APP_ACTIONS);
         $actions = unserialize($actions);
         return $actions;

@@ -14,7 +14,7 @@
  *
  * @category    Social
  * @package     Social_Facebook
- * @copyright   Copyright (c) 2009 Phoenix Medien GmbH & Co. KG (http://www.phoenix-medien.de)
+ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
@@ -27,17 +27,26 @@ class Social_Facebook_Block_Box extends Mage_Core_Block_Template
      */
     protected function _construct()
     {
-        if (!Mage::helper('social_facebook')->isEnabled() || Mage::getSingleton('core/session')->getNoBoxes()) {
+        $mdl = Mage::getSingleton('social_facebook/api');
+        $json = $mdl->getSocialData();
+
+        if (!Mage::helper('social_facebook')->isEnabled() || !sizeof(get_object_vars($json->actions))) {
             return;
         }
         parent::_construct();
 
         $product = Mage::registry('product');
-        $this->setProductId($product->getId());
+        if($product) {
+            $this->setProductId($product->getId());
 
-        $this->setAllActions(Mage::helper('social_facebook')->getAllActions());
+            $this->setAllActions(Mage::helper('social_facebook')->getAllActions());
 
-        $this->setFacebookId(Mage::getSingleton('core/session')->getData('facebook_id'));
+            $this->setFacebookId(Mage::getSingleton('core/session')->getData('facebook_id'));
+
+            $this->setSocialData(Mage::getSingleton('social_facebook/api')->getSocialData());
+        }
+
+        $this->setTemplate('social/facebook/box.phtml');
 
         return $this;
     }
@@ -50,9 +59,30 @@ class Social_Facebook_Block_Box extends Mage_Core_Block_Template
      */
     public function getFriendBox($action)
     {
+        static $finfo = array();
+
         $curr_fbId = $this->getFacebookId();
-        $friends = Mage::getModel('social_facebook/facebook')->getLinkedFriends($curr_fbId,
-            $this->getProductId(), $action);
+        $json = $this->getSocialData();
+        $friends = array();
+        $api = Mage::getSingleton('social_facebook/api');
+        $at = Mage::getSingleton('core/session')->getAccessToken();
+
+        if(empty($json->actions->$action)) { return $friends; }
+
+        $friends = $json->actions->$action;
+
+        $idx = 0;
+        foreach($friends as $fbId) {
+            unset($friends[$idx++]);
+            if(empty($finfo[$fbId])) {
+                list($response, $result) = $api->makeFacebookRequest(array('access_token' => $at), Social_Facebook_Model_Api::URL_GRAPH_FACEBOOK_OBJECT_ID . $fbId, Zend_Http_Client::GET);
+                $finfo[$fbId] = $result;
+            } else {
+                $result = $finfo[$fbId];
+            }
+            $friends[$fbId] = $result->name;
+        }
+
         foreach($friends as $fbId => $fbName) {
             if($fbId==$curr_fbId) { $friends[$fbId] = 'you';break; }
         }
@@ -67,9 +97,9 @@ class Social_Facebook_Block_Box extends Mage_Core_Block_Template
      */
     public function getCountOfUsers($action)
     {
-        return Mage::getModel('social_facebook/facebook')->getCountByActionProduct(
-            $this->escapeHtml($action),
-            $this->getProductId()
-        );
+        $json = $this->getSocialData();
+        if(!empty($json->actions->$action)) {
+            return sizeof($json->actions->$action);
+        }
     }
 }

@@ -14,7 +14,7 @@
  *
  * @category    Social
  * @package     Social_Facebook
- * @copyright   Copyright (c) 2009 Phoenix Medien GmbH & Co. KG (http://www.phoenix-medien.de)
+ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
@@ -39,11 +39,24 @@ class Social_Facebook_Block_Action extends Mage_Core_Block_Template
         $session        = Mage::getSingleton('core/session');
         $user = $session->getData('facebook_user');
         $actions = Mage::helper('social_facebook')->getAllActions();
+        $mdl = Mage::getSingleton('social_facebook/api');
+
+        $this->setTemplate('social/facebook/action.phtml');
+
+        $json = $mdl->getSocialData();
+
+        if(empty($json->count)) {
+            $this->setAllActions($actions);
+            return $this;
+        }
 
         if($user) {
             $facebookModel = Mage::getSingleton('social_facebook/facebook');
             foreach($actions as $aid => $attrs) {
-                $actions[$aid]['selected'] = is_array($facebookModel->loadUserByActionId($attrs['action'], $user['facebook_id'], $product_id));
+                $actions[$aid]['selected'] = false;
+                if(!empty($json->actions->$attrs['action'])) {
+                    $actions[$aid]['selected'] = in_array($user['facebook_id'], $json->actions->$attrs['action']);
+                }
             }
         }
         $this->setAllActions($actions);

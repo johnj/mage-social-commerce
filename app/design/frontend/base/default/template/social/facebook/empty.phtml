@@ -20,7 +20,7 @@
  *
  * @category    design
  * @package     base_default
- * @copyright   Copyright (c) 2010 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
@@ -28,12 +28,18 @@
 
 $actions = Mage::helper('social_facebook')->getAllActions();
 $peopleCount = $this->getPeopleCount(); 
+$user_id = $this->getFbUserId();
+$json = $this->getSocialData();
+
 $actionArray = array();
 $action_string = "";
+$be_the_first = true;
+
 foreach ($actions as $action) {
     if($peopleCount<2) { $actionArray[] = $action['action'] . 's'; } else {
         $actionArray[] = $action['action'];
     }
+    if(!empty($json->actions->$action['action'])) { $be_the_first = false; }
 }
 
 $l = sizeof($actionArray);
@@ -53,27 +59,34 @@ else if($l==1) {
 }
 
 $count_str = "No one ";
-if($peopleCount>1) {
+if($peopleCount>0) {
 $count_str = $peopleCount . " ";
 $count_str .= $peopleCount > 1 ? "people" : "person";
 }
+
 ?>
 <div>
-    <?php echo $this->getChildHtml('social_facebook_action'); ?>
+<?php
+        $html = $this->getLayout()->createBlock('social_facebook/action')->toHtml();
+        if(!empty($html)) { echo $html; }
+?>
 </div>
 
 <?php if ($this->getShowSumm() != Social_Facebook_Block_Start::FACEBOOK_BLOCK_NO_TEXT): ?>
     <div class="facebookNotConnected">
         <span class="fb_image"></span> <span><?php echo $this->__('%s %s this product.', $count_str, $action_string); ?>
-        <?php if ($this->getShowSumm() == Social_Facebook_Block_Start::FACEBOOK_BLOCK_START_CONNECT): ?>
+        <?php if ($this->getShowSumm() == Social_Facebook_Block_Start::FACEBOOK_BLOCK_START_CONNECT) { ?>
             <a href="<?php echo $this->getConnectUrl()?>"><?php echo $this->__('Connect') ?></a> <?php echo $this->__('to see how many are friends.') ?>
-        <?php else: ?>
+        <?php } else if($be_the_first) { ?>
             <?php echo $this->__('Be the first of your friends!') ?>
-        <?php endif; ?>
+        <?php } ?>
         </span>
     </div>
 <?php endif; ?>
 
 <div>
-    <?php echo $this->getChildHtml('social_facebook_box'); ?>
+<?php
+        $html = $this->getLayout()->createBlock('social_facebook/box')->toHtml();
+        if(!empty($html)) { echo $html; }
+?>
 </div>
