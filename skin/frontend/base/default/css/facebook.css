@@ -26,8 +26,6 @@
     background-image: url("http://static.ak.fbcdn.net/rsrc.php/v1/yg/r/Uabljzt60VA.png");
     background-repeat: no-repeat;
     display: inline-block;
-    height: 16px;
-    width: 16px;
 }
 
 .facebookBtn {
@@ -52,7 +50,6 @@ color:#FCFCFE;
 }
 
 .facebookFriendsBox {
-    background: url("../images/bkg_page-title.gif");
     border: 1px solid #CFCFCF;
     padding:5px;
     border-radius: 5px;

@@ -133,12 +133,18 @@ class Social_Facebook_IndexController extends Mage_Core_Controller_Front_Action
             }
         }
 
+        $data['actions'] = array();
+        foreach(Mage::helper('social_facebook')->getAllActions() as $action) {
+            $data['actions'][$action['action']] = array('info' => $action, 'limit' => Mage::helper('social_facebook')->getAppFriendCount($action['action']));
+        }
+
         $data_obj->social = json_encode($data);
 
         $mdl->makeXcomRequest('/experimental/social/events/product/fetch', $data_obj, $schema, true);
 
         $response = $mdl->getXcomSync()->decode($mdl->getXcomSync()->getLastResponse(), file_get_contents($mdl->getSchemaLocation($schema)));
 
+        file_put_contents('/tmp/out', print_r($response->social, true));
         $json = json_decode($response->social);
 
         if(empty($json)) {
@@ -149,6 +155,6 @@ class Social_Facebook_IndexController extends Mage_Core_Controller_Front_Action
 
         $block = $this->getLayout()->createBlock('social_facebook/socialdata');
         $response = $block->toHtml();
-        $this->getResponse->setBody($response);
+        $this->getResponse()->setBody($response);
     }
 }

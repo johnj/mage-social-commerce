@@ -290,9 +290,9 @@ class Social_Facebook_Model_Facebook extends Mage_Core_Model_Abstract
 
             $productData["product_categories"] = $category_data;
 
-            $req = $this->getApi()->makeFacebookRequest(array('access_token' => $this->getAccessToken()), Social_Facebook_Model_Api::URL_GRAPH_FACEBOOK_OBJECT_ID . (string)$action->id, Zend_Http_Client::GET);
-            $friends = $this->getApi()->makeFacebookRequest(array('access_token' => $this->getAccessToken()), Social_Facebook_Model_Api::URL_GRAPH_FACEBOOK_ME_FRIENDS, Zend_Http_Client::GET);
-            $eventInfo->fb_action_info = array('fb' => $req->getBody(), 'actions' => Mage::helper('social_facebook')->getAllActions(), 'friends' => $friends->getBody());
+            list($req, $res) = $this->getApi()->makeFacebookRequest(array('access_token' => $this->getAccessToken()), Social_Facebook_Model_Api::URL_GRAPH_FACEBOOK_OBJECT_ID . (string)$action->id, Zend_Http_Client::GET);
+            list($friends, $res) = $this->getApi()->makeFacebookRequest(array('access_token' => $this->getAccessToken()), Social_Facebook_Model_Api::URL_GRAPH_FACEBOOK_ME_FRIENDS, Zend_Http_Client::GET);
+            $eventInfo->fb_action_info = array('fb' => $req, 'actions' => Mage::helper('social_facebook')->getAllActions(), 'friends' => $friends);
 
             $data_obj = new stdClass();
             $data_obj->product_info = json_encode($productData);
