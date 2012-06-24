@@ -1,11 +1,11 @@
 {
     "type" : "record",
-        "name" : "GetSocialEventsForProduct",
+        "name" : "GetSocialEventsForProductSuccess",
         "fields" : [ {
             "name" : "social",
             "type" : "string"
         }
     ],
-    "topic" : "/social/events/product/fetch",
+    "topic" : "/social/events/product/fetchSucceeded",
     "version" : "1.0.0"
 }

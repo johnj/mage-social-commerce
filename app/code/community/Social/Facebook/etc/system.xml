@@ -59,16 +59,17 @@
                             <show_in_store>0</show_in_store>
                         </enabled>
                         <name translate="label" module="social_facebook">
-                            <label>App Namespace</label>
+                            <label>Facebook App Namespace</label>
                             <frontend_type>text</frontend_type>
                             <sort_order>30</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
                             <validate>required-entry</validate>
+                            <comment>Register your Open Graph application at https://developers.facebook.com/</comment>
                         </name>
                         <id translate="label" module="social_facebook">
-                            <label>App ID</label>
+                            <label>Facebook App ID</label>
                             <frontend_type>text</frontend_type>
                             <sort_order>40</sort_order>
                             <show_in_default>1</show_in_default>
@@ -77,7 +78,7 @@
                             <validate>required-entry validate-digits</validate>
                         </id>
                         <secret translate="label" module="social_facebook">
-                            <label>App Secret</label>
+                            <label>Facebook App Secret</label>
                             <frontend_type>text</frontend_type>
                             <sort_order>50</sort_order>
                             <show_in_default>1</show_in_default>
@@ -86,15 +87,16 @@
                             <validate>required-entry</validate>
                         </secret>
                         <otype translate="label" module="social_facebook">
-                            <label>Object Type</label>
+                            <label>Facebook Object Type</label>
                             <frontend_type>text</frontend_type>
                             <sort_order>60</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
                             <validate>required-entry</validate>
+                            <comment>Create a 'product' object and associate the actions you want to it at https://developers.facebook.com/</comment>
                         </otype>
-                        <fabric_url translate="label" module="social_facebook">
+                        <!--<fabric_url translate="label" module="social_facebook">
                             <validate>validate-url required-entry</validate>
                             <label>X.Commerce Fabric URL</label>
                             <frontend_type>text</frontend_type>
@@ -114,7 +116,7 @@
                             <show_in_website>0</show_in_website>
                             <show_in_store>0</show_in_store>
                             <required>1</required>
-                        </cap_token>
+                        </cap_token>-->
                         <action translate="comment">
                             <label>Actions Settings</label>
                             <frontend_model>social_facebook/adminhtml_facebuttons</frontend_model>
@@ -123,8 +125,37 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
-                            <comment>Add Actions that You Want.</comment>
+                            <comment>Add the actions that you want. These need to be approved by Facebook (usually within 24 hours) before non-developers of your application can use them.</comment>
                         </action>
+                        <auth_file_upload translate="label">
+                            <frontend_type>file</frontend_type>
+                            <backend_model>social_facebook/system_config_backend_authorization</backend_model>
+                            <label>X.Commerce Authorization File</label>
+                            <sort_order>20</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </auth_file_upload>
+                        <registration_extension_button traslate="button_label comment">
+                            <label/>
+                            <frontend_model>social_facebook/adminhtml_system_form_renderer_config_registerButton</frontend_model>
+                            <button_label>Generate X.commerce Authorization File</button_label>
+                            <sort_order>21</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <comment><![CDATA[Click the button above to generate an X.Commerce authorization file if you don't have one]]></comment>
+                        </registration_extension_button>
+                        <authorize_extension_button traslate="button_label comment">
+                            <label/>
+                            <frontend_model>social_facebook/adminhtml_system_form_renderer_config_authButton</frontend_model>
+                            <button_label>Authorize the Social Commerce Extension</button_label>
+                            <sort_order>22</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <comment><![CDATA[After you upload your authorization file from x.com you'll need to authorize this extension]]></comment>
+                        </authorize_extension_button>
                     </fields>
                 </config>
             </groups>

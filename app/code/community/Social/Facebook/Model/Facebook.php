@@ -46,6 +46,11 @@ class Social_Facebook_Model_Facebook extends Mage_Core_Model_Abstract
     const XML_PATH_APP_ACTIONS          = 'facebook/config/action';
     const XML_PATH_FABRIC_URL           = 'facebook/config/fabric_url';
     const XML_PATH_CAP_TOKEN            = 'facebook/config/cap_token';
+    const XML_PATH_TENANT_NAME          = 'facebook/config/tenant_name';
+    const XML_PATH_RAW_AUTH_JSON        = 'facebook/config/raw_json_auth';
+    const XML_PATH_REGISTER_BUTTON      = 'facebook/config/registration_extension_button';
+    const ONBOARDING_URL                = '/merchant_onboarding';
+    const ONBOARDING_URL_DOMAIN         = 'https://devportal.x.com';
 
     protected $_accessToken     = false;
 

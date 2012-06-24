@@ -49,7 +49,7 @@ class Social_Facebook_Block_Adminhtml_Facebuttons extends Mage_Adminhtml_Block_S
     protected function _prepareToRender()
     {
         $this->addColumn('action', array(
-            'label' => Mage::helper('social_facebook')->__('Action'),
+            'label' => Mage::helper('social_facebook')->__('Facebook Action'),
             'style' => 'width:120px',
         ));
         $this->addColumn('title', array(
