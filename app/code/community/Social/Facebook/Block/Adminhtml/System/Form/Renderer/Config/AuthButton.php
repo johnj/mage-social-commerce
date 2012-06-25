@@ -82,6 +82,10 @@ class Social_Facebook_Block_Adminhtml_System_Form_Renderer_Config_AuthButton
             'html_id' => $element->getHtmlId(),
             'button_url' => trim($button_url),
         ));
+        $token = Mage::getStoreConfig(Social_Facebook_Model_Facebook::XML_PATH_CAP_TOKEN);
+        if(empty($token)) {
+            $this->setIsDisabled(true);
+        }
         return $this->_toHtml();
     }
 }

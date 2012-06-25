@@ -24,7 +24,18 @@
  * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 ?>
+<?php
+$disabled = $this->getIsDisabled();
+if(empty($disabled)) {
+?>
 <button onclick="javascript:window.open('<?php echo $this->getButtonUrl(); ?>', 'get_auth_file','toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=yes, resizable=yes, ,left=100, top=100, width=815, height=640'); return false;" class="scalable add" type="button" id="<?php echo $this->getHtmlId() ?>">
+<?php
+} else {
+?>
+<button class="scalable" type="button" id="<?php echo $this->getHtmlId() ?>" style="border:1px solid #727272;color:#999999;background:#cccccc;" onclick="alert('Please browse for an authorization file and save the configuration before trying to authorize this extension.');"'>
+<?php
+}
+?>
     <span><?php echo $this->escapeHtml($this->getButtonLabel()); ?></span>
 </button>
 <?php
@@ -34,6 +45,5 @@ if(!empty($token)) {
 echo "<br /><strong><em>Current Token</em></strong>: <br />" . htmlspecialchars($token) . "<br />";
 echo "<strong><em>Fabric URL</em></strong>: <br />" . htmlspecialchars($this->getFabricUrl()) . "<br />";
 echo "<strong><em>Tenant Name</em></strong>: <br />" . htmlspecialchars($this->getTenantName()) . "<br />";
-
 }
 ?>
