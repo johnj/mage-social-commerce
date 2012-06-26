@@ -154,7 +154,7 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>0</show_in_website>
                             <show_in_store>0</show_in_store>
-                            <comment><![CDATA[After you upload your authorization file from x.com you'll need to authorize this extension]]></comment>
+                            <comment><![CDATA[After you upload your authorization file from x.com you'll need to authorize this extension (make sure you're logged out of x.com before doing this step)]]></comment>
                         </authorize_extension_button>
                     </fields>
                 </config>

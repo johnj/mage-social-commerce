@@ -86,7 +86,7 @@ $count_str .= $peopleCount > 1 ? "people" : "person";
 
 <div>
 <?php
-        $html = $this->getLayout()->createBlock('social_facebook/box')->toHtml();
-        if(!empty($html)) { echo $html; }
+        $html = $this->getLayout()->createBlock('social_facebook/box');
+        if(!empty($html)) { echo $html->toHtml(); }
 ?>
 </div>

@@ -140,11 +140,10 @@ class Social_Facebook_IndexController extends Mage_Core_Controller_Front_Action
 
         $data_obj->social = json_encode($data);
 
-        $mdl->makeXcomRequest('/experimental/social/events/product/fetch', $data_obj, $schema, true);
+        $mdl->makeXcomRequest('/social/events/product/fetch', $data_obj, $schema, true);
 
         $response = $mdl->getXcomSync()->decode($mdl->getXcomSync()->getLastResponse(), file_get_contents($mdl->getSchemaLocation($schema)));
 
-        file_put_contents('/tmp/out', print_r($response->social, true));
         $json = json_decode($response->social);
 
         if(empty($json)) {
