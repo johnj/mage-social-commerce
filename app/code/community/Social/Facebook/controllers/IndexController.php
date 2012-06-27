@@ -104,6 +104,15 @@ class Social_Facebook_IndexController extends Mage_Core_Controller_Front_Action
      */
 
     public function widgetAction() {
+        if (!Mage::helper('social_facebook')->isEnabled()) {
+            return;
+        }
+
+        if(!Mage::helper('social_facebook')->getXcomFabricURL()) {
+            $this->getResponse()->setBody("<strong>[notice]</strong> you've enabled the Social Commerce extension but haven't uploaded a valid X.commerce authorization file yet!");
+            return;
+        }
+
         $productId = (int)$this->getRequest()->getParam('id');
 
         if($productId) {
