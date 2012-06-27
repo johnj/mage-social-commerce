@@ -94,7 +94,7 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
                             <validate>required-entry</validate>
-                            <comment>Create a 'product' object and associate the actions you want to it at https://developers.facebook.com/</comment>
+                            <comment>Create a 'product' (or equivalent) object and associate the actions you want to it at https://developers.facebook.com/</comment>
                         </otype>
                         <!--<fabric_url translate="label" module="social_facebook">
                             <validate>validate-url required-entry</validate>
@@ -144,7 +144,7 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>0</show_in_website>
                             <show_in_store>0</show_in_store>
-                            <comment><![CDATA[Click the button above to generate an X.Commerce authorization file if you don't have one]]></comment>
+                            <comment><![CDATA[Click the button above to generate an X.Commerce authorization file if you don't have one.]]></comment>
                         </registration_extension_button>
                         <authorize_extension_button traslate="button_label comment">
                             <label/>
@@ -154,7 +154,7 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>0</show_in_website>
                             <show_in_store>0</show_in_store>
-                            <comment><![CDATA[After you upload your authorization file from x.com you'll need to authorize this extension (make sure you're logged out of x.com before doing this step)]]></comment>
+                            <comment><![CDATA[After you upload your authorization file from x.com you'll need to authorize this extension (make sure you're logged out of x.com before this step).]]></comment>
                         </authorize_extension_button>
                     </fields>
                 </config>
