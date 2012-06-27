@@ -130,8 +130,8 @@
                         <auth_file_upload translate="label">
                             <frontend_type>file</frontend_type>
                             <backend_model>social_facebook/system_config_backend_authorization</backend_model>
-                            <label>X.Commerce Authorization File</label>
-                            <sort_order>20</sort_order>
+                            <label>X.commerce Authorization File</label>
+                            <sort_order>22</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>0</show_in_website>
                             <show_in_store>0</show_in_store>
