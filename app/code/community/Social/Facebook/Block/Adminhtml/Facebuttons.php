@@ -61,12 +61,13 @@ class Social_Facebook_Block_Adminhtml_Facebuttons extends Mage_Adminhtml_Block_S
             'renderer'  => $this->_selectRenderer(),
         ));
         $this->addColumn('count', array(
-            'label' => Mage::helper('social_facebook')->__('Count in FriendBox'),
+            'label' => Mage::helper('social_facebook')->__('Number of friends to show (default ' . Mage::helper('social_facebook')->getAppFriendCount('') .')'),
             'style' => 'width:120px',
+            'value' => 5
         ));
 
         $this->_addAfter = false;
-        $this->_addButtonLabel = Mage::helper('social_facebook')->__('Add Action Button');
+        $this->_addButtonLabel = Mage::helper('social_facebook')->__('Add an Action');
     }
 
     /**
