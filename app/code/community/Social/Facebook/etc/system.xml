@@ -139,7 +139,7 @@
                         <registration_extension_button traslate="button_label comment">
                             <label/>
                             <frontend_model>social_facebook/adminhtml_system_form_renderer_config_registerButton</frontend_model>
-                            <button_label>Generate X.commerce Authorization File</button_label>
+                            <button_label>Generate an X.commerce Authorization File</button_label>
                             <sort_order>21</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>0</show_in_website>
