@@ -28,13 +28,13 @@
 <config>
     <tabs>
         <social translate="label" module="social_facebook">
-            <label>Social</label>
+            <label>Social Commerce</label>
             <sort_order>300</sort_order>
         </social>
     </tabs>
     <sections>
         <facebook translate="label" module="social_facebook">
-            <label>Facebook</label>
+            <label>X.commerce &amp; Facebook</label>
             <tab>social</tab>
             <sort_order>100</sort_order>
             <show_in_default>1</show_in_default>
@@ -42,7 +42,7 @@
             <show_in_store>1</show_in_store>
             <groups>
                 <config translate="label">
-                    <label>Facebook Config</label>
+                    <label>Social Commerce Settings (for X.commerce and Facebook)</label>
                     <frontend_type>text</frontend_type>
                     <sort_order>10</sort_order>
                     <show_in_default>1</show_in_default>
