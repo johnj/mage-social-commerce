@@ -54,7 +54,6 @@ class Social_Facebook_Block_Adminhtml_System_Form_Renderer_Config_RegisterButton
         //
         $postData = array(
             'store_instance_name' => $store->getName(),
-            'store_endpoint_url'     => $store->getBaseUrl(),
             'is_registered'          => false,
         );
 

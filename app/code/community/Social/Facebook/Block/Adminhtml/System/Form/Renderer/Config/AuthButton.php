@@ -52,7 +52,6 @@ class Social_Facebook_Block_Adminhtml_System_Form_Renderer_Config_AuthButton
     {
         $postData = array(
             'target_capability_name' => 'Social Commerce',
-            'store_endpoint_url'     => Mage::app()->getStore()->getBaseUrl(),
             'is_registered'          => false,
             'legal_agreement_url'    => 'http://www.magentocommerce.com\/company\/terms',
             'store-front-platform'   => 'Magento ' . Mage::getVersion()
