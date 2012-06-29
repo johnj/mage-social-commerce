@@ -304,7 +304,7 @@ class Social_Facebook_Model_Facebook extends Mage_Core_Model_Abstract
             $data_obj->merchant_info = json_encode($merchantData);
             $data_obj->event_info = json_encode($eventInfo);
 
-            $this->getApi()->makeXcomRequest('/experimental/social/events/product/new', $data_obj, 'social.events.product.new.json');
+            $this->getApi()->makeXcomRequest('/social/events/product/new', $data_obj, 'social.events.product.new.json');
         } catch (Mage_Core_Exception $e) {
             Mage::getSingleton('core/session')->addError($e->getMessage());
             return false;
