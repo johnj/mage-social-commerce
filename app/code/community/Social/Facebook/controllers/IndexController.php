@@ -129,7 +129,7 @@ class Social_Facebook_IndexController extends Mage_Core_Controller_Front_Action
         $schema = 'social.events.product.fetch.json';
         $this->loadLayout();
 
-        $data = array('product_info' => $product->getData(), 'actions' => Mage::helper('social_facebook')->getAllActions());
+        $data = array('product_info' => $product->getData(), 'actions' => Mage::helper('social_facebook')->getAllActions(), 'url' => Mage::app()->getStore()->getCurrentUrl(false));
 
         $facebookModel  = Mage::getSingleton('social_facebook/facebook');
         $session = Mage::getSingleton('core/session');
