@@ -120,6 +120,18 @@ class Social_Facebook_IndexController extends Mage_Core_Controller_Front_Action
             if($product->getId()) {
                 Mage::register('product', $product);
             }
+            $product = Mage::getModel('catalog/product')->load($productId);
+            $productData = $product->getData();
+
+            $categories = $product->getCategoryIds();
+            $category_data = array();
+
+            if(!empty($categories)) {
+                foreach($categories as $category_id) {
+                    $category = Mage::getModel('catalog/category')->load($category_id);
+                    $category_data[] = $category->getData();
+                }
+            }
         } else { return; }
 
         $mdl = Mage::getSingleton('social_facebook/api');
@@ -148,6 +160,7 @@ class Social_Facebook_IndexController extends Mage_Core_Controller_Front_Action
         }
 
         $data_obj->social = json_encode($data);
+        //$data_obj->product_info = json_encode(array('product' => $productData, 'category' => $category_data));
 
         $mdl->makeXcomRequest('/social/events/product/fetch', $data_obj, $schema, true);
 
