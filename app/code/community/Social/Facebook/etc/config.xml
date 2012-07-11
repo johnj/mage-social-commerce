@@ -46,14 +46,7 @@
                 </entities>
             </social_facebook_resource>
         </models>
-        <resources>
-            <social_facebook_setup>
-                <setup>
-                    <module>Social_Facebook</module>
-                    <class>Social_Facebook_Model_Resource_Setup</class>
-                </setup>
-            </social_facebook_setup>
-        </resources>
+        <resources />
         <blocks>
             <social_facebook>
                 <class>Social_Facebook_Block</class>
