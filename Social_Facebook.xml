@@ -1,6 +1,6 @@
 <_>
-   <form_key>bQTZWrkFOwDm9jSE</form_key>
-   <name>socialfacebook</name>
+   <form_key>tFPTBQasFqc3IHAE</form_key>
+   <name>Social_Facebook</name>
    <channel>community</channel>
    <version_ids>
       <version_ids>2</version_ids>
@@ -40,7 +40,7 @@
             <max/>
          </max>
          <files>
-            <files>                                    </files>
+            <files>                                        </files>
          </files>
       </package>
       <extension>
@@ -71,6 +71,7 @@
          <target>mageskin</target>
          <target>magedesign</target>
          <target>magedesign</target>
+         <target>magecommunity</target>
       </target>
       <path>
          <path>frontend/base/default/css/facebook.css</path>
@@ -84,6 +85,7 @@
          <path>frontend/base/default/css/facebook.css</path>
          <path>frontend/base/default/template/social/facebook</path>
          <path>frontend/base/default/layout/facebook.xml</path>
+         <path>Social/Facebook/Block/Adminhtml/System/Form/Renderer/Config</path>
       </path>
       <type>
          <type>file</type>
@@ -97,6 +99,7 @@
          <type>file</type>
          <type>dir</type>
          <type>file</type>
+         <type>dir</type>
       </type>
       <include>
          <include/>
@@ -110,8 +113,10 @@
          <include/>
          <include/>
          <include/>
+         <include>#php#</include>
       </include>
       <ignore>
+         <ignore/>
          <ignore/>
          <ignore/>
          <ignore/>
