@@ -75,8 +75,10 @@ $count_str .= $peopleCount > 1 ? "people" : "person";
 <?php if ($this->getShowSumm() != Social_Facebook_Block_Start::FACEBOOK_BLOCK_NO_TEXT): ?>
     <div class="facebookNotConnected">
         <span class="fb_image"></span> <span><?php echo $this->__('%s %s this product.', $count_str, $action_string); ?>
-        <?php if ($this->getShowSumm() == Social_Facebook_Block_Start::FACEBOOK_BLOCK_START_CONNECT) { ?>
+        <?php if ($this->getShowSumm() == Social_Facebook_Block_Start::FACEBOOK_BLOCK_START_CONNECT && !empty($peopleCount)) { ?>
             <a href="<?php echo $this->getConnectUrl()?>"><?php echo $this->__('Connect') ?></a> <?php echo $this->__('to see how many are friends.') ?>
+        <?php } else if ($this->getShowSumm() == Social_Facebook_Block_Start::FACEBOOK_BLOCK_START_CONNECT && empty($peopleCount)) { ?>
+            <a href="<?php echo $this->getConnectUrl()?>"><?php echo $this->__('Connect') ?></a> <?php echo $this->__('to be the first of your friends!') ?>
         <?php } else if($be_the_first) { ?>
             <?php echo $this->__('Be the first of your friends!') ?>
         <?php } ?>
