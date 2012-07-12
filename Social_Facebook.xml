@@ -1,5 +1,5 @@
 <_>
-   <form_key>tFPTBQasFqc3IHAE</form_key>
+   <form_key>rnjgUIBRVMe4Ll43</form_key>
    <name>Social_Facebook</name>
    <channel>community</channel>
    <version_ids>
@@ -40,7 +40,7 @@
             <max/>
          </max>
          <files>
-            <files>                                        </files>
+            <files>                                            </files>
          </files>
       </package>
       <extension>
@@ -72,6 +72,8 @@
          <target>magedesign</target>
          <target>magedesign</target>
          <target>magecommunity</target>
+         <target>magecommunity</target>
+         <target>magedesign</target>
       </target>
       <path>
          <path>frontend/base/default/css/facebook.css</path>
@@ -86,6 +88,8 @@
          <path>frontend/base/default/template/social/facebook</path>
          <path>frontend/base/default/layout/facebook.xml</path>
          <path>Social/Facebook/Block/Adminhtml/System/Form/Renderer/Config</path>
+         <path>Social/Facebook/Model/System/Config/Backend/</path>
+         <path>adminhtml/default/default/template/social/facebook/system/config/</path>
       </path>
       <type>
          <type>file</type>
@@ -99,6 +103,8 @@
          <type>file</type>
          <type>dir</type>
          <type>file</type>
+         <type>dir</type>
+         <type>dir</type>
          <type>dir</type>
       </type>
       <include>
@@ -114,8 +120,12 @@
          <include/>
          <include/>
          <include>#php#</include>
+         <include>#php#</include>
+         <include>#phtml#</include>
       </include>
       <ignore>
+         <ignore/>
+         <ignore/>
          <ignore/>
          <ignore/>
          <ignore/>

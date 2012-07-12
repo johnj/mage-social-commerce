@@ -4,9 +4,6 @@
         "fields" : [ {
             "name" : "social",
             "type" : "string"
-        },{
-            "name" : "product_info",
-            "type" : "string"
         }
     ],
     "topic" : "/social/events/product/fetch",

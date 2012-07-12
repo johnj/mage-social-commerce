@@ -80,7 +80,7 @@ class Social_Facebook_Block_Box extends Mage_Core_Block_Template
             } else {
                 $result = $finfo[$fbId];
             }
-            $friends[$fbId] = $result->name;
+            $friends[$fbId] = $result->first_name;
         }
 
         foreach($friends as $fbId => $fbName) {

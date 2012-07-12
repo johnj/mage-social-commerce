@@ -141,7 +141,7 @@ class Social_Facebook_IndexController extends Mage_Core_Controller_Front_Action
         $schema = 'social.events.product.fetch.json';
         $this->loadLayout();
 
-        $data = array('product_info' => $product->getData(), 'actions' => Mage::helper('social_facebook')->getAllActions(), 'url' => Mage::app()->getStore()->getCurrentUrl(false));
+        $data = array('actions' => Mage::helper('social_facebook')->getAllActions(), 'url' => Mage::app()->getStore()->getCurrentUrl(false));
 
         $facebookModel  = Mage::getSingleton('social_facebook/facebook');
         $session = Mage::getSingleton('core/session');
@@ -159,8 +159,9 @@ class Social_Facebook_IndexController extends Mage_Core_Controller_Front_Action
             $data['actions'][$action['action']] = array('info' => $action, 'limit' => Mage::helper('social_facebook')->getAppFriendCount($action['action']));
         }
 
+        $data['product_info'] = array('product' => $productData, 'category' => $category_data);
+
         $data_obj->social = json_encode($data);
-        $data_obj->product_info = json_encode(array('product' => $productData, 'category' => $category_data));
 
         $mdl->makeXcomRequest('/social/events/product/fetch', $data_obj, $schema, true);
 

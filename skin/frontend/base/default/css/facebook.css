@@ -91,10 +91,6 @@ margin-left:8px;
 margin-right:8px;
 }
 
-.facebookNotConnected {
-padding-top:10px;
-}
-
 .facebookLeftStrip {
 background-color:#627AAD;width:4px;border-radius:3px;
 }
@@ -102,3 +98,4 @@ background-color:#627AAD;width:4px;border-radius:3px;
 .facebookRightBlock {
 padding-left:5px;
 }
+

@@ -70,10 +70,7 @@ class Social_Facebook_Block_Socialdata extends Mage_Core_Block_Template
             $actions = Mage::helper('social_facebook')->getAllActions();
             $users  = array();
             foreach ($actions as $action) {
-                $data = Mage::getModel('social_facebook/facebook')->getLinkedFriends($facebookId, $product->getId(), $action['action']);
-                if (!empty($data)) {
-                    break;
-                }
+                if(!empty($json->actions->$action)) { $data = true; break; }
             }
 
             if (empty($data)) {

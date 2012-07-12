@@ -134,23 +134,6 @@ class Social_Facebook_Model_Facebook extends Mage_Core_Model_Abstract
     }
 
     /**
-     * Get Linked Facebook Friends
-     *
-     * @param string $facebookId
-     * @param int $productId
-     * @param string $action
-     * @return array
-     */
-    public function getLinkedFriends($facebookId, $productId, $action)
-    {
-        $friends = $this->cacheFriends(array(), $facebookId);
-        if (!empty($friends)) {
-            return $this->_getResource()->getLinkedFriends($friends, $productId, $action);
-        }
-        return array();
-    }
-
-    /**
      * Get Facebook Api
      *
      * @return Social_Facebook_Model_Api
