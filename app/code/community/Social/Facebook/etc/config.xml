@@ -115,4 +115,11 @@
             </controller_action_predispatch_catalog_product_view>
         </events>
     </frontend>
+    <default>
+        <facebook>
+            <config>
+                <otype>product</otype>
+            </config>
+        </facebook>
+    </default>
 </config>
