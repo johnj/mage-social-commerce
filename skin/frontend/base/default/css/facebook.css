@@ -99,3 +99,6 @@ background-color:#627AAD;width:4px;border-radius:3px;
 padding-left:5px;
 }
 
+.facebookUser a {
+text-decoration:none;
+}
