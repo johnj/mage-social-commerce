@@ -70,7 +70,7 @@ class Social_Facebook_Block_Socialdata extends Mage_Core_Block_Template
             $actions = Mage::helper('social_facebook')->getAllActions();
             $users  = array();
             foreach ($actions as $action) {
-                if(!empty($json->actions->$action)) { $data = true; break; }
+                if(!empty($json->actions->$action['action'])) { $data = true; break; }
             }
 
             if (empty($data)) {

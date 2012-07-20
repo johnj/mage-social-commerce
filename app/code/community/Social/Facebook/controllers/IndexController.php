@@ -176,7 +176,9 @@ class Social_Facebook_IndexController extends Mage_Core_Controller_Front_Action
         $mdl->setSocialData($json);
 
         $block = $this->getLayout()->createBlock('social_facebook/socialdata');
-        $response = $block->toHtml();
-        $this->getResponse()->setBody($response);
+        if(!empty($block)) {
+            $response = $block->toHtml();
+            $this->getResponse()->setBody($response);
+        }
     }
 }
