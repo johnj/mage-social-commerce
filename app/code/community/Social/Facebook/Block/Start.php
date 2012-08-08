@@ -24,20 +24,13 @@ class Social_Facebook_Block_Start extends Mage_Core_Block_Template
     const FACEBOOK_BLOCK_START_CONNECT  = 1;
     const FACEBOOK_BLOCK_START_FRIENDS  = 2;
 
-    /**
-     * Block Initialization
-     *
-     * @return
-     */
     protected function _construct()
     {
         if (!Mage::helper('social_facebook')->isEnabled()) {
             return;
         }
-        parent::_construct();
-        $mdl = Mage::getSingleton('social_facebook/api');
 
-        $json = $mdl->getSocialData();
+        parent::_construct();
 
         $this->setTemplate('social/facebook/socialdata.phtml');
 
@@ -48,8 +41,5 @@ class Social_Facebook_Block_Start extends Mage_Core_Block_Template
         $session = Mage::getSingleton('core/session');
         $session->setData('product_id', $product->getId());
         $session->setData('product_url', $product->getUrlModel()->getUrlInStore($product));
-
-        $accessToken = $session->getData('access_token');
-        $facebookId  = $session->getData('facebook_id');
     }
 }

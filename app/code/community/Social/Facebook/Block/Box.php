@@ -27,8 +27,8 @@ class Social_Facebook_Block_Box extends Mage_Core_Block_Template
      */
     protected function _construct()
     {
-        $mdl = Mage::getSingleton('social_facebook/api');
-        $json = $mdl->getSocialData();
+        $model = Mage::getSingleton('social_facebook/api');
+        $json = $model->getSocialData();
 
         if (!Mage::helper('social_facebook')->isEnabled() || !sizeof(get_object_vars($json->actions))) {
             return;
@@ -36,7 +36,8 @@ class Social_Facebook_Block_Box extends Mage_Core_Block_Template
         parent::_construct();
 
         $product = Mage::registry('product');
-        if($product) {
+
+        if ($product) {
             $this->setProductId($product->getId());
 
             $this->setAllActions(Mage::helper('social_facebook')->getAllActions());
@@ -59,32 +60,39 @@ class Social_Facebook_Block_Box extends Mage_Core_Block_Template
      */
     public function getFriendBox($action)
     {
-        static $finfo = array();
+        static $friendInfo = array();
 
-        $curr_fbId = $this->getFacebookId();
+        $currFbId = $this->getFacebookId();
         $json = $this->getSocialData();
         $friends = array();
         $api = Mage::getSingleton('social_facebook/api');
-        $at = Mage::getSingleton('core/session')->getAccessToken();
+        $accessToken = Mage::getSingleton('core/session')->getAccessToken();
 
-        if(empty($json->actions->$action)) { return $friends; }
+        if (empty($json->actions->$action)) {
+            return $friends;
+        }
 
         $friends = $json->actions->$action;
 
         $idx = 0;
-        foreach($friends as $fbId) {
+        foreach ($friends as $fbId) {
             unset($friends[$idx++]);
-            if(empty($finfo[$fbId])) {
-                list($response, $result) = $api->makeFacebookRequest(array('access_token' => $at), Social_Facebook_Model_Api::URL_GRAPH_FACEBOOK_OBJECT_ID . $fbId, Zend_Http_Client::GET);
-                $finfo[$fbId] = $result;
+            if (empty($friendInfo[$fbId])) {
+                $response = $api->makeFacebookRequest(
+                    array('access_token' => $accessToken),
+                    Social_Facebook_Model_Api::URL_GRAPH_FACEBOOK_OBJECT_ID . $fbId, Zend_Http_Client::GET);
+
+                $friendInfo[$fbId] = $response[1];
             } else {
-                $result = $finfo[$fbId];
+                $result = $friendInfo[$fbId];
             }
             $friends[$fbId] = $result->first_name;
         }
 
-        foreach($friends as $fbId => $fbName) {
-            if($fbId==$curr_fbId) { $friends[$fbId] = 'you';break; }
+        foreach (array_keys($friends) as $fbId) {
+            if ($fbId==$currFbId) {
+                $friends[$fbId] = 'you';break;
+            }
         }
         return $friends;
     }
@@ -98,7 +106,7 @@ class Social_Facebook_Block_Box extends Mage_Core_Block_Template
     public function getCountOfUsers($action)
     {
         $json = $this->getSocialData();
-        if(!empty($json->actions->$action)) {
+        if (!empty($json->actions->$action)) {
             return sizeof($json->actions->$action);
         }
     }

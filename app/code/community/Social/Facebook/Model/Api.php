@@ -44,8 +44,9 @@ class Social_Facebook_Model_Api extends Varien_Object
     protected $_facebookCode    = false;
     protected $_facebookAction  = false;
     protected $_productOgUrl    = false;
-    private $_xcom              = false;
-    private $_xcom_sync         = false;
+    protected $_socialData      = false;
+    private $_Xcom              = false;
+    private $_XcomSync          = false;
     private $_social_data       = NULL;
 
 
@@ -109,7 +110,14 @@ class Social_Facebook_Model_Api extends Varien_Object
         return $this;
     }
 
-    public function getSchemaLocation($schema) {
+    /**
+     * Get the local schema location
+     *
+     * @param string $schema
+     * @return string
+     */
+    public function getSchemaLocation($schema)
+    {
         return dirname(__FILE__) . "/../etc/" . $schema;
     }
 
@@ -120,53 +128,73 @@ class Social_Facebook_Model_Api extends Varien_Object
      * @throws Mage_Core_Exception
      * @return boolean
      */
-    public function makeXcomRequest($topic, $object, $schema_file, $sync=false, $debug=false)
+    public function makeXcomRequest($topic, $object, $schemaFile, $sync=false, $debug=false)
     {
-        $http_code = 0;
+        $httpCode = 0;
         $xcom = NULL;
         try {
-            if(!class_exists('Xcom')) {
-                Mage::throwException(Mage::helper('social_facebook')->__('The Xcom class is not available, please install and enable the X.commerce PHP5 extension'));
+            if (!extension_loaded('xcommerce')) {
+                Mage::throwException(
+                    Mage::helper('social_facebook')->__('The xcommerce extension wasn't loaded,
+                    please install and enable the X.commerce PHP5 extension'));
             }
 
-            if(!$sync) {
+            if (!$sync) {
                 $xcom = $this->getXcom();
             } else {
                 $xcom = $this->getXcomSync();
             }
 
-            if($debug) { $xcom->__debug = true; }
-
-            $file_location = $this->getSchemaLocation($schema_file);
-
-            if(!is_readable($file_location)) {
-                Mage::throwException(Mage::helper('social_facebook')->__('Unable to load schema file: ') . $file_location);
+            if ($debug) {
+                $xcom->__debug = true;
             }
 
-            $http_code = $xcom->send($topic, $object, file_get_contents($file_location), '1.0');
-        } catch (Exception $e) {
-            Mage::logException($e);
+            $fileLocation = $this->getSchemaLocation($schemaFile);
+
+            if (!is_readable($fileLocation)) {
+                Mage::throwException(Mage::helper('social_facebook')->__('Unable to load schema file: %s'),
+                    $fileLocation);
+            }
+
+            $httpCode = $xcom->send($topic, $object, file_get_contents($fileLocation), '1.0');
+            } catch (Exception $e) {
+                Mage::logException($e);
+            }
+
+        if (empty($httpCode) || $httpCode!=200) {
+            Mage::throwException(Mage::helper('social_facebook')->__(
+                'Error sending message to fabric, HTTP CODE: %s', $httpCode));
         }
 
-        if (empty($http_code) || $http_code!=200) {
-            Mage::throwException(Mage::helper('social_facebook')->__('Error sending message to fabric, HTTP CODE: ' . $http_code));
-        }
-
-        return $http_code;
+        return $httpCode;
     }
 
-    public function getXcomSync() {
-        if(empty($this->_xcom_sync)) {
-            $this->_xcom_sync = new Xcom(Mage::helper('social_facebook')->getXcomFabricURL(true), '', Mage::helper('social_facebook')->getXcomCapToken());
+    /**
+     * Get a sync instance of Xcom
+     *
+     * @return Xcom
+     */
+    public function getXcomSync()
+    {
+        if (empty($this->_XcomSync)) {
+            $this->_XcomSync = new Xcom(Mage::helper('social_facebook')->getXcomFabricURL(true), '',
+                Mage::helper('social_facebook')->getXcomCapToken());
         }
-        return $this->_xcom_sync;
+        return $this->_XcomSync;
     }
 
-    public function getXcom() {
-        if(empty($this->_xcom)) {
-            $this->_xcom = new Xcom(Mage::helper('social_facebook')->getXcomFabricURL(), '', Mage::helper('social_facebook')->getXcomCapToken());
+    /**
+     * Get an async instance of Xcom
+     *
+     * @return Xcom
+     */
+    public function getXcom()
+    {
+        if (empty($this->_Xcom)) {
+            $this->_Xcom = new Xcom(Mage::helper('social_facebook')->getXcomFabricURL(), '',
+                Mage::helper('social_facebook')->getXcomCapToken());
         }
-        return $this->_xcom;
+        return $this->_Xcom;
     }
 
     /**
@@ -199,12 +227,14 @@ class Social_Facebook_Model_Api extends Varien_Object
 
         if (!empty($result) && (!empty($result->error) || !empty($result->error->message))) {
             if($result->error->code=="3501") {
-                 /*
-                  *user already associated with this action/product 
-                  */
-                $m = array();
-                preg_match('/Original Action ID: (\d+)/i', $result->error->message, $m);
-                return $m[1];
+                /*
+                 * user already associated with this action/product 
+                 */
+                $matches = array();
+                preg_match('/Original Action ID: (\d+)/i', $result->error->message, $matches);
+                if (!empty($matches)) {
+                    return $matches[1];
+                }
             }
             Mage::throwException(Mage::helper('social_facebook')->__('Facebook error: ') . $result->error->message);
         }
@@ -223,7 +253,7 @@ class Social_Facebook_Model_Api extends Varien_Object
             return false;
         }
 
-        list($response, $result) = $this->makeFacebookRequest(
+        $result = $this->makeFacebookRequest(
             array(
                 'client_id'     => Mage::helper('social_facebook')->getAppId(),
                 'redirect_uri'  => $this->_productUrl,
@@ -236,7 +266,7 @@ class Social_Facebook_Model_Api extends Varien_Object
 
         // remove the @expires
         $params = null;
-        parse_str($result, $params);
+        parse_str($result[0], $params);
         $this->_accessToken = $params['access_token'];
 
         return $this->_accessToken;
@@ -297,11 +327,13 @@ class Social_Facebook_Model_Api extends Varien_Object
 
         list($response, $result) = $this->makeFacebookRequest(
             array(),
-            Social_Facebook_Model_Api::URL_GRAPH_FACEBOOK_ABOUT_ME . $appName . ':' . $this->_facebookAction . '?access_token=' . urlencode($this->_accessToken) . "&$objectType=". urlencode($this->_productOgUrl),
+                    Social_Facebook_Model_Api::URL_GRAPH_FACEBOOK_ABOUT_ME . $appName . ':' . $this->_facebookAction
+                    . '?access_token=' . urlencode($this->_accessToken)
+                    . "&$objectType=". urlencode($this->_productOgUrl),
             Zend_Http_Client::POST
         );
 
-        if(!is_object($response)) {
+        if (!is_object($response)) {
             $action = new stdClass();
             $action->id = $response;
             return $action;
@@ -334,11 +366,23 @@ class Social_Facebook_Model_Api extends Varien_Object
         return $result;
     }
 
-    public function setSocialData($json) {
-        $this->_social_data = $json;
+    /**
+     * Set Social Data
+     *
+     * @return void
+     */
+    public function setSocialData($json)
+    {
+        $this->_socialData = $json;
     }
 
-    public function getSocialData() {
-        return $this->_social_data;
+    /**
+     * Get Social Data
+     *
+     * @return stdClass
+     */
+    public function getSocialData()
+    {
+        return $this->_socialData;
     }
 }

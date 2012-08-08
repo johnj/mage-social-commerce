@@ -59,20 +59,22 @@ class Social_Facebook_Block_Adminhtml_System_Form_Renderer_Config_RegisterButton
 
         $postData = urlencode(json_encode($postData));
 
-        $client = new Zend_Http_Client(Social_Facebook_Model_Facebook::ONBOARDING_URL_DOMAIN . Social_Facebook_Model_Facebook::ONBOARDING_URL, array(
+        $client = new Zend_Http_Client(Social_Facebook_Model_Facebook::ONBOARDING_URL_DOMAIN .
+            Social_Facebook_Model_Facebook::ONBOARDING_URL, array(
                 'maxredirects' => 0,
                 'timeout'      => 30));
 
         $client->setParameterPost('fabric_config_info', $postData);
 
-        $response = $client->request('POST');
+        $client->request('POST');
 
-        $hdrs = Zend_Http_Response::extractHeaders($client->getLastResponse());
+        $headers = Zend_Http_Response::extractHeaders($client->getLastResponse());
 
-        $button_url = Social_Facebook_Model_Facebook::ONBOARDING_URL_DOMAIN . Social_Facebook_Model_Facebook::ONBOARDING_URL;
+        $buttonUrl = Social_Facebook_Model_Facebook::ONBOARDING_URL_DOMAIN .
+            Social_Facebook_Model_Facebook::ONBOARDING_URL;
 
-        if(!empty($hdrs['location'])) {
-            $button_url = Social_Facebook_Model_Facebook::ONBOARDING_URL_DOMAIN . $hdrs['location'];
+        if (!empty($headers['location'])) {
+            $buttonUrl = Social_Facebook_Model_Facebook::ONBOARDING_URL_DOMAIN . $headers['location'];
         }
 
         $originalData = $element->getOriginalData();
@@ -80,11 +82,11 @@ class Social_Facebook_Block_Adminhtml_System_Form_Renderer_Config_RegisterButton
         $this->addData(array(
             'button_label' => $originalData['button_label'],
             'html_id' => $element->getHtmlId(),
-            'button_url' => trim($button_url),
+            'button_url' => trim($buttonUrl),
         ));
 
         $token = Mage::getStoreConfig(Social_Facebook_Model_Facebook::XML_PATH_CAP_TOKEN);
-        if(!empty($token)) {
+        if (!empty($token)) {
             $this->setToken($token);
             $this->setFabricUrl(Mage::getStoreConfig(Social_Facebook_Model_Facebook::XML_PATH_FABRIC_URL));
             $this->setTenantName(Mage::getStoreConfig(Social_Facebook_Model_Facebook::XML_PATH_TENANT_NAME));

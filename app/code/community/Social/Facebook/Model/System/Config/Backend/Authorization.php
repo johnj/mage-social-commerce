@@ -58,16 +58,19 @@ class Social_Facebook_Model_System_Config_Backend_Authorization extends Mage_Cor
             try {
                 $json = file_get_contents($tmpPath);
                 $auth = json_decode($json);
-                if(empty($auth->authorizations)) {
+                if (empty($auth->authorizations)) {
                     Mage::throwException('Invalid authorization file!');
                 }
-                foreach($auth->authorizations as $token_info) {
-                    if(strtolower($token_info->type)!='tenant') {
+                foreach ($auth->authorizations as $tokenInfo) {
+                    if (strtolower($tokenInfo->type)!='tenant') {
                         continue;
                     }
-                    Mage::getConfig()->saveConfig(Social_Facebook_Model_Facebook::XML_PATH_FABRIC_URL, $auth->fabricUrl, 'default', 0);
-                    Mage::getConfig()->saveConfig(Social_Facebook_Model_Facebook::XML_PATH_CAP_TOKEN, $token_info->bearerToken, 'default', 0);
-                    Mage::getConfig()->saveConfig(Social_Facebook_Model_Facebook::XML_PATH_TENANT_NAME, $token_info->tenantName, 'default', 0);
+                    Mage::getConfig()->saveConfig(Social_Facebook_Model_Facebook::XML_PATH_FABRIC_URL,
+                        $auth->fabricUrl, 'default', 0);
+                    Mage::getConfig()->saveConfig(Social_Facebook_Model_Facebook::XML_PATH_CAP_TOKEN,
+                        $tokenInfo->bearerToken, 'default', 0);
+                    Mage::getConfig()->saveConfig(Social_Facebook_Model_Facebook::XML_PATH_TENANT_NAME,
+                        $tokenInfo->tenantName, 'default', 0);
                     break;
                 }
                 Mage::getConfig()->saveConfig(Social_Facebook_Model_Facebook::XML_PATH_RAW_AUTH_JSON, $json, 'default', 0);

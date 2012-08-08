@@ -49,7 +49,6 @@ class Social_Facebook_Model_Observer
         $facebookAction = $session->getData('facebook_action');
         $productId      = $session->getData('product_id');
         $productUrl     = $session->getData('product_url');
-        $user = false;
 
         /** @var $facebookModel Social_Facebook_Model_Facebook */
         $facebookModel  = Mage::getSingleton('social_facebook/facebook');
@@ -57,7 +56,7 @@ class Social_Facebook_Model_Observer
 
         $session->setData('facebook_user', $user);
 
-        if($facebookAction) {
+        if ($facebookAction) {
             $result = $facebookModel->sendFacebookAction($facebookAction, $user['facebook_id'], $productId);
 
             if (!empty($result)) {
@@ -67,7 +66,7 @@ class Social_Facebook_Model_Observer
             Mage::app()->getResponse()->setRedirect($productUrl);
             Mage::app()->getResponse()->sendResponse();
             $session->unsetData('facebook_action');
-            exit();
+            return $this;
         }
 
         if ($user) {

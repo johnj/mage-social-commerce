@@ -34,89 +34,91 @@
 class Social_Facebook_Helper_Data extends Mage_Core_Helper_Abstract
 {
     /**
-     * Checks whether Facebook module is enabled for frontend in system config
-     *
-     * @return bool
-     */
+      * Checks whether Facebook module is enabled for frontend in system config
+      *
+      * @return bool
+      */
     public function isEnabled()
     {
         return Mage::getStoreConfigFlag(Social_Facebook_Model_Facebook::XML_PATH_ENABLED);
     }
 
     /**
-     * Get Facebook App Id
-     *
-     * @return string
-     */
+      * Get Facebook App Id
+      *
+      * @return string
+      */
     public function getAppId()
     {
         return Mage::getStoreConfig(Social_Facebook_Model_Facebook::XML_PATH_APP_ID);
     }
 
      /**
-     * Get Facebook App Secret
-     *
-     * @return string
-     */
+      * Get Facebook App Secret
+      *
+      * @return string
+      */
     public function getAppSecret()
     {
         return Mage::getStoreConfig(Social_Facebook_Model_Facebook::XML_PATH_APP_SECRET);
     }
 
      /**
-     * Get Facebook App Name
-     *
-     * @return string
-     */
+      * Get Facebook App Name
+      *
+      * @return string
+      */
     public function getAppName()
     {
         return Mage::getStoreConfig(Social_Facebook_Model_Facebook::XML_PATH_APP_NAME);
     }
 
      /**
-     * Get Facebook Object Type (usually product)
-     *
-     * @return string
-     */
+      * Get Facebook Object Type (usually product)
+      *
+      * @return string
+      */
     public function getObjectType()
     {
         return Mage::getStoreConfig(Social_Facebook_Model_Facebook::XML_PATH_APP_OBJECT_TYPE);
     }
 
      /**
-     * Get XFabric URL
-     *
-     * @return string
-     */
+      * Get XFabric URL
+      *
+      * @return string
+      */
     public function getXcomFabricURL($sync=false)
     {
-        if($sync) {
-            return str_replace('/fabric', '/xbridge/invoke', Mage::getStoreConfig(Social_Facebook_Model_Facebook::XML_PATH_FABRIC_URL));
+        if ($sync) {
+            return str_replace('/fabric', '/xbridge/invoke',
+                Mage::getStoreConfig(Social_Facebook_Model_Facebook::XML_PATH_FABRIC_URL));
         }
         return Mage::getStoreConfig(Social_Facebook_Model_Facebook::XML_PATH_FABRIC_URL);
     }
 
      /**
-     * Get the capability token
-     *
-     * @return string
-     */
+      * Get the capability token
+      *
+      * @return string
+      */
     public function getXcomCapToken()
     {
         return Mage::getStoreConfig(Social_Facebook_Model_Facebook::XML_PATH_CAP_TOKEN);
     }
 
      /**
-     * Get Facebook Actions
-     *
-     * @return string
-     */
+      * Get Facebook Actions
+      *
+      * @return string
+      */
     public function getAllActions()
     {
         static $actions = NULL;
 
-        if($actions)
+        if($actions) {
             return $actions;
+        }
 
         $actions = Mage::getStoreConfig(Social_Facebook_Model_Facebook::XML_PATH_APP_ACTIONS);
         $actions = unserialize($actions);
@@ -124,11 +126,11 @@ class Social_Facebook_Helper_Data extends Mage_Core_Helper_Abstract
     }
 
      /**
-     * Get Facebook App Friend Count in FriendBox
-     *
-     * @param string $action
-     * @return string
-     */
+      * Get Facebook App Friend Count in FriendBox
+      *
+      * @param string $action
+      * @return string
+      */
     public function getAppFriendCount($action)
     {
         $count = 0;
@@ -149,11 +151,11 @@ class Social_Facebook_Helper_Data extends Mage_Core_Helper_Abstract
     }
 
     /**
-     * Get Redirect Url fo Facebook Authorization
-     *
-     * @param Mage_Catalog_Model_Product $product
-     * @return string
-     */
+      * Get Redirect Url fo Facebook Authorization
+      *
+      * @param Mage_Catalog_Model_Product $product
+      * @return string
+      */
     public function getRedirectUrl($product)
     {
         return Social_Facebook_Model_Api::URL_GRAPH_DIALOG_OAUTH

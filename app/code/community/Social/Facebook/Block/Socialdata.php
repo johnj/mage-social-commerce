@@ -30,7 +30,7 @@ class Social_Facebook_Block_Socialdata extends Mage_Core_Block_Template
     protected function _construct()
     {
         $helper = Mage::helper('social_facebook');
-        $mdl = Mage::getSingleton('social_facebook/api');
+        $api = Mage::getSingleton('social_facebook/api');
         $this->_count = 0;
 
         if (!$helper->isEnabled()) {
@@ -40,11 +40,11 @@ class Social_Facebook_Block_Socialdata extends Mage_Core_Block_Template
 
         /** @var $product Mage_Catalog_Model_Product */
         $product = Mage::registry('product');
-        $json = $mdl->getSocialData();
+        $json = $api->getSocialData();
         $this->setSocialData($json);
 
-        if($product) {
-            if(!empty($json->count)) {
+        if ($product) {
+            if (!empty($json->count)) {
                 $this->setPeopleCount($json->count);
             }
         }
@@ -59,7 +59,6 @@ class Social_Facebook_Block_Socialdata extends Mage_Core_Block_Template
         $this->setFbUserId($session->getData('facebook_id'));
 
         $accessToken = $session->getData('access_token');
-        $facebookId  = $session->getData('facebook_id');
 
         if (!$accessToken) {
             $this->setShowSumm(Social_Facebook_Block_Start::FACEBOOK_BLOCK_START_CONNECT);
@@ -68,9 +67,10 @@ class Social_Facebook_Block_Socialdata extends Mage_Core_Block_Template
             $session->setData('no_boxes', 1);
         } else {
             $actions = Mage::helper('social_facebook')->getAllActions();
-            $users  = array();
             foreach ($actions as $action) {
-                if(!empty($json->actions->$action['action'])) { $data = true; break; }
+                if (!empty($json->actions->$action['action'])) {
+                    $data = true; break;
+                }
             }
 
             if (empty($data)) {
@@ -84,4 +84,3 @@ class Social_Facebook_Block_Socialdata extends Mage_Core_Block_Template
         return $this;
     }
 }
-
