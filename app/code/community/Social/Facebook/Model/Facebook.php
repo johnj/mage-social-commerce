@@ -204,6 +204,7 @@ class Social_Facebook_Model_Facebook extends Mage_Core_Model_Abstract
         } catch (Mage_Core_Exception $e) {
             Mage::getSingleton('core/session')->addError($e->getMessage());
         } catch (Exception $e) {
+            var_dump($e);exit;
             Mage::getSingleton('core/session')->addError(
                  Mage::helper('social_facebook')->__('Cannot Get Facebook Access Token')
             );
@@ -235,12 +236,6 @@ class Social_Facebook_Model_Facebook extends Mage_Core_Model_Abstract
         try {
             if (!$this->getAccessToken()) {
                 return false;
-            }
-
-            $facebookUser = $this->loadUserByActionId($action, $fbUid, $productId);
-
-            if ($facebookUser) {
-                return true;
             }
 
             $action = $this->getApi()->sendFacebookAction();
@@ -275,7 +270,7 @@ class Social_Facebook_Model_Facebook extends Mage_Core_Model_Abstract
             $eventInfo->product_url = $session->getData('product_url');
             $eventInfo->action = $session->getData('facebook_action');
             $eventInfo->og_product_url = $session->getData('product_og_url');
-            $eventInfo->fbUid = $session->getData('facebook_id');
+            $eventInfo->fb_uid = $session->getData('facebook_id');
             $eventInfo->fb_action_id = $action->id;
 
             $productData["product_categories"] = $categoryData;
@@ -284,17 +279,17 @@ class Social_Facebook_Model_Facebook extends Mage_Core_Model_Abstract
                 array('access_token' => $this->getAccessToken()),
                 Social_Facebook_Model_Api::URL_GRAPH_FACEBOOK_OBJECT_ID . (string)$action->id, Zend_Http_Client::GET);
 
-            $action_info = $response[0];
+            $actionInfo = $response[1];
 
             $response = $this->getApi()->makeFacebookRequest(
                 array('access_token' => $this->getAccessToken()),
                 Social_Facebook_Model_Api::URL_GRAPH_FACEBOOK_ME_FRIENDS, Zend_Http_Client::GET);
 
-            $friends = $response[0];
+            $friends = $response[1];
 
-            $eventInfo->fb_action_info = array('fb' => $req,
+            $eventInfo->fb_action_info = array('fb' => json_encode($actionInfo),
                 'actions' => Mage::helper('social_facebook')->getAllActions(),
-                'friends' => $friends);
+                'friends' => json_encode($friends));
 
             $dataObj = new stdClass();
             $dataObj->product_info = json_encode($productData);

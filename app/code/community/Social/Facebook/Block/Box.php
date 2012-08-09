@@ -30,7 +30,7 @@ class Social_Facebook_Block_Box extends Mage_Core_Block_Template
         $model = Mage::getSingleton('social_facebook/api');
         $json = $model->getSocialData();
 
-        if (!Mage::helper('social_facebook')->isEnabled() || !sizeof(get_object_vars($json->actions))) {
+        if (!Mage::helper('social_facebook')->isEnabled() || !is_object($json) || !sizeof(get_object_vars($json->actions))) {
             return;
         }
         parent::_construct();
@@ -82,7 +82,7 @@ class Social_Facebook_Block_Box extends Mage_Core_Block_Template
                     array('access_token' => $accessToken),
                     Social_Facebook_Model_Api::URL_GRAPH_FACEBOOK_OBJECT_ID . $fbId, Zend_Http_Client::GET);
 
-                $friendInfo[$fbId] = $response[1];
+                $friendInfo[$fbId] = $result = $response[1];
             } else {
                 $result = $friendInfo[$fbId];
             }

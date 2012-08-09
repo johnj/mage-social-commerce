@@ -66,7 +66,7 @@ class Social_Facebook_Model_Observer
             Mage::app()->getResponse()->setRedirect($productUrl);
             Mage::app()->getResponse()->sendResponse();
             $session->unsetData('facebook_action');
-            return $this;
+            exit();
         }
 
         if ($user) {

@@ -24,13 +24,6 @@
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
-/**
- * Facebook model
- *
- * @category   Social
- * @package    Social_Facebook
- * @author     Magento Core Team <core@magentocommerce.com>
- */
 class Social_Facebook_Model_Api extends Varien_Object
 {
     const URL_GRAPH_DIALOG_OAUTH        = 'http://www.facebook.com/dialog/oauth';
@@ -135,7 +128,7 @@ class Social_Facebook_Model_Api extends Varien_Object
         try {
             if (!extension_loaded('xcommerce')) {
                 Mage::throwException(
-                    Mage::helper('social_facebook')->__('The xcommerce extension wasn't loaded,
+                    Mage::helper('social_facebook')->__('The xcommerce extension wasn\'t loaded,
                     please install and enable the X.commerce PHP5 extension'));
             }
 
@@ -157,13 +150,16 @@ class Social_Facebook_Model_Api extends Varien_Object
             }
 
             $httpCode = $xcom->send($topic, $object, file_get_contents($fileLocation), '1.0');
-            } catch (Exception $e) {
-                Mage::logException($e);
-            }
+        } catch (Exception $e) {
+            Mage::logException($e);
+        }
 
         if (empty($httpCode) || $httpCode!=200) {
-            Mage::throwException(Mage::helper('social_facebook')->__(
-                'Error sending message to fabric, HTTP CODE: %s', $httpCode));
+            try {
+                Mage::throwException(Mage::helper('social_facebook')->__( 'Error sending message to fabric, HTTP CODE: %s', $httpCode));
+            } catch(Exception $e) {
+                Mage::logException($e);
+            }
         }
 
         return $httpCode;
@@ -266,7 +262,7 @@ class Social_Facebook_Model_Api extends Varien_Object
 
         // remove the @expires
         $params = null;
-        parse_str($result[0], $params);
+        parse_str($result[1], $params);
         $this->_accessToken = $params['access_token'];
 
         return $this->_accessToken;
