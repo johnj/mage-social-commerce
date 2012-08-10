@@ -57,7 +57,7 @@ class Social_Facebook_Model_System_Config_Backend_Authorization extends Mage_Cor
 
             try {
                 $json = file_get_contents($tmpPath);
-                $auth = json_decode($json);
+                $auth = Mage::helper('core')->jsonDecode($json, Zend_Json::TYPE_OBJECT);
                 if (empty($auth->authorizations)) {
                     Mage::throwException('Invalid authorization file!');
                 }

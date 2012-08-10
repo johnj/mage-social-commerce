@@ -287,14 +287,14 @@ class Social_Facebook_Model_Facebook extends Mage_Core_Model_Abstract
 
             $friends = $response[1];
 
-            $eventInfo->fb_action_info = array('fb' => json_encode($actionInfo),
+            $eventInfo->fb_action_info = array('fb' => Mage::helper('core')->jsonEncode($actionInfo),
                 'actions' => Mage::helper('social_facebook')->getAllActions(),
-                'friends' => json_encode($friends));
+                'friends' => Mage::helper('core')->jsonEncode($friends));
 
             $dataObj = new stdClass();
-            $dataObj->product_info = json_encode($productData);
-            $dataObj->merchant_info = json_encode($merchantData);
-            $dataObj->event_info = json_encode($eventInfo);
+            $dataObj->product_info = Mage::helper('core')->jsonEncode($productData);
+            $dataObj->merchant_info = Mage::helper('core')->jsonEncode($merchantData);
+            $dataObj->event_info = Mage::helper('core')->jsonEncode($eventInfo);
 
             $this->getApi()->makeXcomRequest('/social/events/product/new', $dataObj, 'social.events.product.new.json');
         } catch (Mage_Core_Exception $e) {

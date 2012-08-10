@@ -30,7 +30,9 @@ class Social_Facebook_Model_Api extends Varien_Object
     const URL_GRAPH_OAUTH_ACCESS_TOKEN  = 'https://graph.facebook.com/oauth/access_token';
     const URL_GRAPH_FACEBOOK_ABOUT_ME   = 'https://graph.facebook.com/me/';
     const URL_GRAPH_FACEBOOK_ME_FRIENDS = 'https://graph.facebook.com/me/friends';
-    const URL_GRAPH_FACEBOOK_OBJECT_ID = 'https://graph.facebook.com/';
+    const URL_GRAPH_FACEBOOK_OBJECT_ID  = 'https://graph.facebook.com/';
+    const FB_ERR_ACTION_EXISTS          = 3501;
+    const HTTP_OK                       = 200;
 
     protected $_accessToken     = false;
     protected $_productUrl      = false;
@@ -111,7 +113,7 @@ class Social_Facebook_Model_Api extends Varien_Object
      */
     public function getSchemaLocation($schema)
     {
-        return dirname(__FILE__) . "/../etc/" . $schema;
+        return Mage::getModuleDir('etc', 'Social_Facebook') . '/' . $schema;
     }
 
     /**
@@ -119,14 +121,14 @@ class Social_Facebook_Model_Api extends Varien_Object
      *
      * @param object $params
      * @throws Mage_Core_Exception
-     * @return boolean
+     * @return int
      */
     public function makeXcomRequest($topic, $object, $schemaFile, $sync=false, $debug=false)
     {
         $httpCode = 0;
         $xcom = NULL;
         try {
-            if (!extension_loaded('xcommerce')) {
+            if (!class_exists('Xcom')) {
                 Mage::throwException(
                     Mage::helper('social_facebook')->__('The xcommerce extension wasn\'t loaded,
                     please install and enable the X.commerce PHP5 extension'));
@@ -154,7 +156,7 @@ class Social_Facebook_Model_Api extends Varien_Object
             Mage::logException($e);
         }
 
-        if (empty($httpCode) || $httpCode!=200) {
+        if ($httpCode!=self::HTTP_OK) {
             try {
                 Mage::throwException(Mage::helper('social_facebook')->__( 'Error sending message to fabric, HTTP CODE: %s', $httpCode));
             } catch(Exception $e) {
@@ -216,13 +218,13 @@ class Social_Facebook_Model_Api extends Varien_Object
             $client->setMethod($method);
 
             $response   = $client->request();
-            $result     = json_decode($response->getBody());
+            $result     = Mage::helper('core')->jsonDecode($response->getBody(), Zend_Json::TYPE_OBJECT);
         } catch (Exception $e) {
             Mage::throwException(Mage::helper('social_facebook')->__('Facebook Request API Error'));
         }
 
         if (!empty($result) && (!empty($result->error) || !empty($result->error->message))) {
-            if($result->error->code=="3501") {
+            if($result->error->code==self::FB_ERR_ACTION_EXISTS) {
                 /*
                  * user already associated with this action/product 
                  */
@@ -241,12 +243,16 @@ class Social_Facebook_Model_Api extends Varien_Object
     /**
      * Get Access Token
      *
-     * @return mixed
+     * @return string | false
      */
     public function getAccessToken()
     {
         if (empty($this->_facebookCode)) {
             return false;
+        }
+
+        if (!empty($this->_accessToken)) {
+            return $this->_accessToken;
         }
 
         $result = $this->makeFacebookRequest(
@@ -260,9 +266,13 @@ class Social_Facebook_Model_Api extends Varien_Object
             Zend_Http_Client::GET
         );
 
-        // remove the @expires
         $params = null;
         parse_str($result[1], $params);
+
+        if (empty($params['access_token'])) {
+            return false;
+        }
+
         $this->_accessToken = $params['access_token'];
 
         return $this->_accessToken;
@@ -271,11 +281,11 @@ class Social_Facebook_Model_Api extends Varien_Object
     /**
      * Get Facebook User
      *
-     * @return mixed
+     * @return array | false
      */
     public function getFacebookUser()
     {
-        static $_authInfo = false;
+        $_authInfo = Mage::getSingleton('social_facebook/facebook')->getFacebookAuthInfo();
 
         if(!empty($_authInfo)) {
             return $_authInfo;
@@ -300,13 +310,15 @@ class Social_Facebook_Model_Api extends Varien_Object
             'facebook_name' => $result->name
         );
 
+        Mage::getSingleton('social_facebook/facebook')->setFacebookAuthInfo($_authInfo);
+
         return $_authInfo;
     }
 
     /**
      * Send Facebook Action
      *
-     * @return mixed
+     * @return array | false
      */
     public function sendFacebookAction()
     {
@@ -341,7 +353,7 @@ class Social_Facebook_Model_Api extends Varien_Object
     /**
      * Get Facebook Friends
      *
-     * @return mixed
+     * @return array | false
      */
     public function getFacebookFriends()
     {

@@ -57,7 +57,7 @@ class Social_Facebook_Block_Adminhtml_System_Form_Renderer_Config_AuthButton
             'store-front-platform'   => 'Magento ' . Mage::getVersion()
         );
 
-        $postData = urlencode(json_encode($postData));
+        $postData = urlencode(Mage::helper('core')->jsonEncode($postData));
 
         $client = new Zend_Http_Client(Social_Facebook_Model_Facebook::ONBOARDING_URL_DOMAIN
             . Social_Facebook_Model_Facebook::ONBOARDING_URL, array(
