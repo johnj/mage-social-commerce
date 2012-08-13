@@ -128,12 +128,6 @@ class Social_Facebook_Model_Api extends Varien_Object
         $httpCode = 0;
         $xcom = NULL;
         try {
-            if (!class_exists('Xcom')) {
-                Mage::throwException(
-                    Mage::helper('social_facebook')->__('The xcommerce extension wasn\'t loaded,
-                    please install and enable the X.commerce PHP5 extension'));
-            }
-
             if (!$sync) {
                 $xcom = $this->getXcom();
             } else {
@@ -202,7 +196,7 @@ class Social_Facebook_Model_Api extends Varien_Object
      * @param string $uri
      * @param string $method
      * @throws Mage_Core_Exception
-     * @return Zend_Http_Response
+     * @return array
      */
     public function makeFacebookRequest($params, $uri, $method)
     {
@@ -218,7 +212,12 @@ class Social_Facebook_Model_Api extends Varien_Object
             $client->setMethod($method);
 
             $response   = $client->request();
-            $result     = Mage::helper('core')->jsonDecode($response->getBody(), Zend_Json::TYPE_OBJECT);
+            try {
+                $result     = Mage::helper('core')->jsonDecode($response->getBody(), Zend_Json::TYPE_OBJECT);
+            } catch(Zend_Json_Exception $e) {
+                /* failed to decode, that's fine, we'll pass through */
+                $result = $response->getBody();
+            }
         } catch (Exception $e) {
             Mage::throwException(Mage::helper('social_facebook')->__('Facebook Request API Error'));
         }
@@ -392,5 +391,56 @@ class Social_Facebook_Model_Api extends Varien_Object
     public function getSocialData()
     {
         return $this->_socialData;
+    }
+
+    /**
+     * Fetch Social Data
+     *
+     * @return stdClass | false
+     */
+    public function fetchSocialData($productData, $categoryData) {
+        $dataObj = new stdClass();
+
+        $schema = 'social.events.product.fetch.json';
+
+        $data = array('actions' => Mage::helper('social_facebook')->getAllActions(),
+            'url' => Mage::app()->getStore()->getCurrentUrl(false));
+
+        $facebookModel  = Mage::getSingleton('social_facebook/facebook');
+        $session = Mage::getSingleton('core/session');
+        $accessToken = $session->getData('access_token');
+
+        if (!empty($accessToken)) {
+            $user = $facebookModel->getFacebookUser();
+            if (!empty($user["facebook_id"])) {
+                $data['fb_uid'] = $user["facebook_id"];
+                $data['friends'] = $facebookModel->getFriendsForUser($user["facebook_id"]);
+            }
+        }
+
+        $data['actions'] = array();
+        foreach (Mage::helper('social_facebook')->getAllActions() as $action) {
+            $data['actions'][$action['action']] = array('info' => $action,
+                'limit' => Mage::helper('social_facebook')->getAppFriendCount($action['action']));
+        }
+
+        $data['product_info'] = array('product' => $productData, 'category' => $categoryData);
+
+        $dataObj->social = Mage::helper('core')->jsonEncode($data);
+
+        $this->makeXcomRequest('/social/events/product/fetch', $dataObj, $schema, true);
+
+        $response = $this->getXcomSync()->decode($this->getXcomSync()->getLastResponse(),
+            file_get_contents($this->getSchemaLocation($schema)));
+
+        $json = Mage::helper('core')->jsonDecode($response->social, Zend_Json::TYPE_OBJECT);
+
+        if (empty($json)) {
+            return false;
+        }
+
+        $this->setSocialData($json);
+
+        return $json;
     }
 }

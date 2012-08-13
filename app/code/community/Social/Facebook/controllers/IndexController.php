@@ -109,8 +109,9 @@ class Social_Facebook_IndexController extends Mage_Core_Controller_Front_Action
         }
 
         if (!Mage::helper('social_facebook')->getXcomFabricURL()) {
-            $this->getResponse()->setBody("<strong>[notice]</strong> you've enabled the Social Commerce extension
-                but haven't uploaded a valid X.commerce authorization file yet!");
+            $this->getResponse()->setBody(Mage::helper('social_facebook')->__("
+                <strong>[notice]</strong> you've enabled the Social Commerce extension
+                but haven't uploaded a valid X.commerce authorization file yet!"));
             return;
         }
 
@@ -125,12 +126,12 @@ class Social_Facebook_IndexController extends Mage_Core_Controller_Front_Action
             $productData = $product->getData();
 
             $categories = $product->getCategoryIds();
-            $category_data = array();
+            $categoryData = array();
 
             if (!empty($categories)) {
-                foreach($categories as $category_id) {
-                    $category = Mage::getModel('catalog/category')->load($category_id);
-                    $category_data[] = $category->getData();
+                foreach ($categories as $categoryId) {
+                    $category = Mage::getModel('catalog/category')->load($categoryId);
+                    $categoryData[] = $category->getData();
                 }
             }
         } else {
@@ -139,48 +140,9 @@ class Social_Facebook_IndexController extends Mage_Core_Controller_Front_Action
 
         $api = Mage::getSingleton('social_facebook/api');
 
-        $dataObj = new stdClass();
+        $api->fetchSocialData($productData, $categoryData);
 
-        $schema = 'social.events.product.fetch.json';
         $this->loadLayout();
-
-        $data = array('actions' => Mage::helper('social_facebook')->getAllActions(),
-            'url' => Mage::app()->getStore()->getCurrentUrl(false));
-
-        $facebookModel  = Mage::getSingleton('social_facebook/facebook');
-        $session = Mage::getSingleton('core/session');
-        $accessToken = $session->getData('access_token');
-
-        if (!empty($accessToken)) {
-            $user = $facebookModel->getFacebookUser();
-            if (!empty($user["facebook_id"])) {
-                $data['fb_uid'] = $user["facebook_id"];
-                $data['friends'] = $facebookModel->getFriendsForUser($user["facebook_id"]);
-            }
-        }
-
-        $data['actions'] = array();
-        foreach (Mage::helper('social_facebook')->getAllActions() as $action) {
-            $data['actions'][$action['action']] = array('info' => $action,
-                'limit' => Mage::helper('social_facebook')->getAppFriendCount($action['action']));
-        }
-
-        $data['product_info'] = array('product' => $productData, 'category' => $category_data);
-
-        $dataObj->social = Mage::helper('core')->jsonEncode($data);
-
-        $api->makeXcomRequest('/social/events/product/fetch', $dataObj, $schema, true);
-
-        $response = $api->getXcomSync()->decode($api->getXcomSync()->getLastResponse(),
-            file_get_contents($api->getSchemaLocation($schema)));
-
-        $json = Mage::helper('core')->jsonDecode($response->social, Zend_Json::TYPE_OBJECT);
-
-        if (empty($json)) {
-            return;
-        }
-
-        $api->setSocialData($json);
 
         $block = $this->getLayout()->createBlock('social_facebook/socialdata');
 

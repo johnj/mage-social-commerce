@@ -40,6 +40,13 @@ class Social_Facebook_Helper_Data extends Mage_Core_Helper_Abstract
       */
     public function isEnabled()
     {
+        if (!class_exists('Xcom')) {
+            Mage::throwException(
+                Mage::helper('social_facebook')->__('The xcommerce extension wasn\'t loaded,
+                please install and enable the X.commerce PHP5 extension'));
+            return false;
+        }
+
         return Mage::getStoreConfigFlag(Social_Facebook_Model_Facebook::XML_PATH_ENABLED);
     }
 

@@ -51,6 +51,8 @@ class Social_Facebook_Model_Facebook extends Mage_Core_Model_Abstract
     const XML_PATH_REGISTER_BUTTON      = 'facebook/config/registration_extension_button';
     const ONBOARDING_URL                = '/merchant_onboarding';
     const ONBOARDING_URL_DOMAIN         = 'https://devportal.x.com';
+    const NEW_EVENT_TOPIC               = '/social/events/product/new';
+    const NEW_EVENT_SCHEMA              = 'social.events.product.new.json';
 
     protected $_accessToken     = false;
 
@@ -103,33 +105,52 @@ class Social_Facebook_Model_Facebook extends Mage_Core_Model_Abstract
     }
 
     /**
-     * Cache Friends From Facebook
+     * Get cache key name
+     *
+     * @param string $facebookId
+     * @return string
+     */
+    protected function getFriendsCacheKey($facebookId)
+    {
+        return 'social_facebook_' . $facebookId;
+    }
+
+    /**
+     * Get friends from cache
+     *
+     * @param string $facebookId
+     * @return array | false
+     */
+    protected function getFriends($facebookId)
+    {
+        $users  = Mage::app()->loadCache($this->getFriendsCacheKey($facebookId));
+        if(empty($users)) {
+            return false;
+        }
+        return unserialize($users);
+    }
+
+    
+    /**
+     * Set friend info in cache
      *
      * @param object $data
      * @param string $facebookId
      * @return array
      */
-    public function cacheFriends($data, $facebookId)
+    protected function cacheFriends($data, $facebookId)
     {
-        $name   = 'social_facebook_' . $facebookId;
-
-        $users  = Mage::app()->loadCache($name);
-
-        if (empty($users)) {
-            if (empty($data)) {
-                return false;
-            }
-            $users  = array();
-            $users[] = $facebookId;
-            foreach ($data->data as $user) {
-                $users[] = $user->id;
-            }
-
-            Mage::app()->saveCache(serialize($users), $name, array(), 3600);
-        } else {
-            $users = unserialize($users);
+        if (empty($data)) {
+            return false;
         }
 
+        $users  = array();
+        $users[] = $facebookId;
+        foreach ($data->data as $user) {
+            $users[] = $user->id;
+        }
+
+        Mage::app()->saveCache(serialize($users), $this->getFriendsCacheKey($facebookId), array(), 3600);
         return $users;
     }
 
@@ -138,16 +159,23 @@ class Social_Facebook_Model_Facebook extends Mage_Core_Model_Abstract
      *
      * @return Social_Facebook_Model_Api
      */
-    public function getApi()
+    public function getApi($exchangingToken=false)
     {
-        $session = Mage::getSingleton('core/session');
+        $api = Mage::getSingleton('social_facebook/api');
+        $apiSession = $api->getSessionApi();
 
-        return Mage::getSingleton('social_facebook/api')
-            ->setProductUrl($session->getData('product_url'))
-            ->setFacebookAction($session->getData('facebook_action'))
-            ->setProductOgUrl($session->getData('product_og_url'))
-            ->setAccessToken($this->_accessToken)
-        ;
+        if(empty($apiSession)) {
+            $session = Mage::getSingleton('core/session');
+
+            $apiSession = Mage::getSingleton('social_facebook/api')
+                ->setProductUrl($session->getData('product_url'))
+                ->setFacebookAction($session->getData('facebook_action'))
+                ->setProductOgUrl($session->getData('product_og_url'))
+                ->setAccessToken($exchangingToken ? '' : $this->getAccessToken());
+
+            $api->setSessionApi($apiSession);
+        }
+        return $apiSession;
     }
 
     /**
@@ -193,18 +221,17 @@ class Social_Facebook_Model_Facebook extends Mage_Core_Model_Abstract
                 $session->unsetData('access_token');
             }
 
-            $facebookCode = Mage::app()->getRequest()->getParam('code');
+            $accessCode = Mage::app()->getRequest()->getParam('code');
 
-            if (!empty($facebookCode)) {
-                $this->_accessToken = $this->getApi()
-                    ->setFacebookCode($facebookCode)
+            if (!empty($accessCode)) {
+                $this->_accessToken = $this->getApi(true)
+                    ->setFacebookCode($accessCode)
                     ->getAccessToken()
                 ;
             }
         } catch (Mage_Core_Exception $e) {
             Mage::getSingleton('core/session')->addError($e->getMessage());
         } catch (Exception $e) {
-            var_dump($e);exit;
             Mage::getSingleton('core/session')->addError(
                  Mage::helper('social_facebook')->__('Cannot Get Facebook Access Token')
             );
@@ -213,7 +240,7 @@ class Social_Facebook_Model_Facebook extends Mage_Core_Model_Abstract
 
         if (!empty($this->_accessToken)) {
             $session->setData('access_token', $this->_accessToken);
-            if (!empty($facebookCode)) {
+            if (!empty($accessCode)) {
                 Mage::app()->getResponse()->setRedirect($productUrl);
                 Mage::app()->getResponse()->sendResponse();
                 return false;
@@ -229,9 +256,9 @@ class Social_Facebook_Model_Facebook extends Mage_Core_Model_Abstract
     /**
      * Send Facebook Action
      *
-     * @return mixed
+     * @return array | false
      */
-    public function sendFacebookAction($action, $fbUid, $productId)
+    public function sendFacebookAction($fbUid, $productId)
     {
         try {
             if (!$this->getAccessToken()) {
@@ -296,7 +323,7 @@ class Social_Facebook_Model_Facebook extends Mage_Core_Model_Abstract
             $dataObj->merchant_info = Mage::helper('core')->jsonEncode($merchantData);
             $dataObj->event_info = Mage::helper('core')->jsonEncode($eventInfo);
 
-            $this->getApi()->makeXcomRequest('/social/events/product/new', $dataObj, 'social.events.product.new.json');
+            $this->getApi()->makeXcomRequest(self::NEW_EVENT_TOPIC, $dataObj, self::NEW_EVENT_SCHEMA);
         } catch (Mage_Core_Exception $e) {
             Mage::getSingleton('core/session')->addError($e->getMessage());
             return false;
@@ -315,9 +342,9 @@ class Social_Facebook_Model_Facebook extends Mage_Core_Model_Abstract
     /**
      * Get Facebook Friends
      *
-     * @return mixed
+     * @return array | false
      */
-    public function getFacebookFriends()
+    protected function getFacebookFriends()
     {
         try {
             if (!$this->getAccessToken()) {
@@ -341,7 +368,7 @@ class Social_Facebook_Model_Facebook extends Mage_Core_Model_Abstract
     /**
      * Get Facebook User
      *
-     * @return mixed
+     * @return array | false
      */
     public function getFacebookUser()
     {
@@ -375,7 +402,7 @@ class Social_Facebook_Model_Facebook extends Mage_Core_Model_Abstract
      */
     public function getFriendsForUser($facebookId)
     {
-        $users  = $this->cacheFriends(array(), $facebookId);
+        $users  = $this->getFriends($facebookId);
         if (empty($users)) {
             $result = $this->getFacebookFriends();
             if (!empty($result)) {
