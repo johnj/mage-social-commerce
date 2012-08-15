@@ -196,7 +196,7 @@ class Social_Facebook_Model_Api extends Varien_Object
      * @param string $uri
      * @param string $method
      * @throws Mage_Core_Exception
-     * @return array
+     * @return array | string
      */
     public function makeFacebookRequest($params, $uri, $method)
     {
