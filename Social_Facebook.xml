@@ -1,5 +1,5 @@
 <_>
-   <form_key>pUpCuYl7td8ji4MT</form_key>
+   <form_key>VOzVcVjTitlGSA4i</form_key>
    <name>Social_Facebook</name>
    <channel>community</channel>
    <version_ids>
@@ -40,13 +40,13 @@
             <max/>
          </max>
          <files>
-            <files>                                               </files>
+            <files>                                                    </files>
          </files>
       </package>
       <extension>
          <name>
             <name>PDO</name>
-            <name>X.commerce</name>
+            <name>PDO</name>
          </name>
          <min>
             <min/>
@@ -74,6 +74,7 @@
          <target>magecommunity</target>
          <target>magecommunity</target>
          <target>magedesign</target>
+         <target>magecommunity</target>
       </target>
       <path>
          <path>frontend/base/default/css/facebook.css</path>
@@ -90,6 +91,7 @@
          <path>Social/Facebook/Block/Adminhtml/System/Form/Renderer/Config</path>
          <path>Social/Facebook/Model/System/Config/Backend/</path>
          <path>adminhtml/default/default/template/social/facebook/system/config/</path>
+         <path>Social/Facebook/locale/Social_Facebook.csv</path>
       </path>
       <type>
          <type>file</type>
@@ -106,6 +108,7 @@
          <type>dir</type>
          <type>dir</type>
          <type>dir</type>
+         <type>file</type>
       </type>
       <include>
          <include/>
@@ -122,8 +125,10 @@
          <include>#php#</include>
          <include>#php#</include>
          <include>#phtml#</include>
+         <include/>
       </include>
       <ignore>
+         <ignore/>
          <ignore/>
          <ignore/>
          <ignore/>
