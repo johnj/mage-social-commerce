@@ -30,9 +30,16 @@ class Social_Facebook_Block_Box extends Mage_Core_Block_Template
         $model = Mage::getSingleton('social_facebook/api');
         $json = $model->getSocialData();
 
-        if (!Mage::helper('social_facebook')->isEnabled() || !is_object($json) || !sizeof(get_object_vars($json->actions))) {
+        if (!Mage::helper('social_facebook')->isEnabled()) {
             return;
         }
+
+        if (!is_object($json) || !sizeof(get_object_vars($json->actions))) {
+            Mage::helper('social_facebook')->__('The Social Commerce
+                extension is enabled but no actions have been setup');
+            return;
+        }
+
         parent::_construct();
 
         $product = Mage::registry('product');

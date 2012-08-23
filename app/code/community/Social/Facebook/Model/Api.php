@@ -128,10 +128,6 @@ class Social_Facebook_Model_Api extends Varien_Object
         $httpCode = 0;
         $xcom = NULL;
         try {
-            if(!class_exists('Xcom')) {
-                Mage::throwException(Mage::helper('social_facebook')->__('The Xcom class is not available, please install and enable the X.commerce PHP5 extension'));
-            }
-
             if (!$sync) {
                 $xcom = $this->getXcom();
             } else {
@@ -423,7 +419,16 @@ class Social_Facebook_Model_Api extends Varien_Object
         }
 
         $data['actions'] = array();
-        foreach (Mage::helper('social_facebook')->getAllActions() as $action) {
+
+        $actions = Mage::helper('social_facebook')->getAllActions();
+
+        if (empty($actions)) {
+            Mage::throwException(Mage::helper('social_facebook')->__('[error] no social commerce
+                actions have been setup, please setup some actions in the Social Commerce
+                configuration'));
+        }
+
+        foreach ($actions as $action) {
             $data['actions'][$action['action']] = array('info' => $action,
                 'limit' => Mage::helper('social_facebook')->getAppFriendCount($action['action']));
         }

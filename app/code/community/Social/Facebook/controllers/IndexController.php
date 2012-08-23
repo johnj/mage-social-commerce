@@ -108,9 +108,17 @@ class Social_Facebook_IndexController extends Mage_Core_Controller_Front_Action
             return;
         }
 
+        if (!extension_loaded('xcommerce')) {
+            $this->getResponse()->setBody(Mage::helper('social_facebook')->__("
+                <strong>[error]</strong> you've enabled the Social Commerce extension
+                but haven't setup the xcommerce PHP extension yet,
+                you can download it at http://pecl.php.net/xcommerce"));
+            return;
+        }
+
         if (!Mage::helper('social_facebook')->getXcomFabricURL()) {
             $this->getResponse()->setBody(Mage::helper('social_facebook')->__("
-                <strong>[notice]</strong> you've enabled the Social Commerce extension
+                <strong>[error]</strong> you've enabled the Social Commerce extension
                 but haven't uploaded a valid X.commerce authorization file yet!"));
             return;
         }
@@ -140,15 +148,18 @@ class Social_Facebook_IndexController extends Mage_Core_Controller_Front_Action
 
         $api = Mage::getSingleton('social_facebook/api');
 
-        $api->fetchSocialData($productData, $categoryData);
+        try {
+            $api->fetchSocialData($productData, $categoryData);
+            $this->loadLayout();
 
-        $this->loadLayout();
+            $block = $this->getLayout()->createBlock('social_facebook/socialdata');
 
-        $block = $this->getLayout()->createBlock('social_facebook/socialdata');
-
-        if (!empty($block)) {
-            $response = $block->toHtml();
-            $this->getResponse()->setBody($response);
+            if (!empty($block)) {
+                $response = $block->toHtml();
+                $this->getResponse()->setBody($response);
+            }
+        } catch(Exception $e) {
+            $this->getResponse()->setBody($e->getMessage());
         }
     }
 }
