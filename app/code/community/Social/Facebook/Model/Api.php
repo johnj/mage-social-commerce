@@ -145,7 +145,7 @@ class Social_Facebook_Model_Api extends Varien_Object
                     $fileLocation);
             }
 
-            $httpCode = $xcom->send($topic, $object, file_get_contents($fileLocation), '1.0');
+            $httpCode = $xcom->send($topic, $object, file_get_contents($fileLocation));
         } catch (Exception $e) {
             Mage::logException($e);
         }
