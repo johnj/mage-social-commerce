@@ -1,7 +1,7 @@
 <div id="social_facebook_block"></div>
 <script>
 new Ajax.Updater('social_facebook_block', '<?php
-echo Mage::getUrl('facebook/index/widget/', array('id' => urlencode((int)$this->getRequest()->getParam('id'))));
+echo Mage::getUrl('facebook/index/widget/', array('id' => urlencode((int)$this->getRequest()->getParam('id')),'_secure' => true));
 ?>', {
   method: 'get'
 });
