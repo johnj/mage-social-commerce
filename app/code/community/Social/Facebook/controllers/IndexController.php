@@ -111,7 +111,7 @@ class Social_Facebook_IndexController extends Mage_Core_Controller_Front_Action
         if (!Mage::helper('social_facebook')->getSCBearerToken()) {
             $this->getResponse()->setBody(Mage::helper('social_facebook')->__("
                 <strong>[error]</strong> you've enabled the Social Commerce extension
-                but haven't provisioned a valid token yet!"));
+                but haven't set a Social Commerce App Secret yet!"));
             return;
         }
 

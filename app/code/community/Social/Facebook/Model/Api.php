@@ -31,7 +31,7 @@ class Social_Facebook_Model_Api extends Varien_Object
     const URL_GRAPH_FACEBOOK_ABOUT_ME   = 'https://graph.facebook.com/me/';
     const URL_GRAPH_FACEBOOK_ME_FRIENDS = 'https://graph.facebook.com/me/friends';
     const URL_GRAPH_FACEBOOK_OBJECT_ID  = 'https://graph.facebook.com/';
-    const URL_SC_API_SERVER             = 'https://sc.jawed.name/xcomsocialcom_v2/';
+    const URL_SC_API_SERVER             = 'https://sc.jawed.name/xcomsocialcom/';
     const FB_ERR_ACTION_EXISTS          = 3501;
     const HTTP_OK                       = 200;
 
