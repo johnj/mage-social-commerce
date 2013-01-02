@@ -31,6 +31,7 @@ class Social_Facebook_Model_Api extends Varien_Object
     const URL_GRAPH_FACEBOOK_ABOUT_ME   = 'https://graph.facebook.com/me/';
     const URL_GRAPH_FACEBOOK_ME_FRIENDS = 'https://graph.facebook.com/me/friends';
     const URL_GRAPH_FACEBOOK_OBJECT_ID  = 'https://graph.facebook.com/';
+    const URL_SC_API_SERVER             = 'https://sc.jawed.name/xcomsocialcom_v2/';
     const FB_ERR_ACTION_EXISTS          = 3501;
     const HTTP_OK                       = 200;
 
@@ -117,48 +118,43 @@ class Social_Facebook_Model_Api extends Varien_Object
     }
 
     /**
-     * send message to Xfabric
+     * send message to SC
      *
      * @param object $params
      * @throws Mage_Core_Exception
      * @return int
      */
-    public function makeXcomRequest($topic, $object, $schemaFile, $sync=false, $debug=false)
+    public function makeXcomRequest($topic, $json)
     {
-        $httpCode = 0;
-        $xcom = NULL;
         try {
-            if (!$sync) {
-                $xcom = $this->getXcom();
-            } else {
-                $xcom = $this->getXcomSync();
-            }
+            $client = new Varien_Http_Client();
 
-            if ($debug) {
-                $xcom->__debug = true;
-            }
+            $client->setUri(self::URL_SC_API_SERVER . $topic);
+            $client->setConfig(array(
+                        'adapter' => 'Zend_Http_Client_Adapter_Curl',
+                        'timeout'       => 4,
+                        'curloptions' => array(CURLOPT_SSL_VERIFYPEER => true, CURLOPT_SSL_VERIFYHOST => 2, CURLOPT_CAINFO => Mage::getModuleDir('etc', 'Social_Facebook') . '/cainfo.crt'),
+                        ));
+            $client->setMethod('POST');
+            $client->setParameterPost('social', $json);
+            $client->setHeaders('Authorization', Mage::helper('social_facebook')->getSCBearerToken());
 
-            $fileLocation = $this->getSchemaLocation($schemaFile);
-
-            if (!is_readable($fileLocation)) {
-                Mage::throwException(Mage::helper('social_facebook')->__('Unable to load schema file: %s'),
-                    $fileLocation);
-            }
-
-            $httpCode = $xcom->send($topic, $object, file_get_contents($fileLocation));
+            $response   = $client->request();
+            $result     = Mage::helper('core')->jsonDecode($response->getBody(), Zend_Json::TYPE_OBJECT);
         } catch (Exception $e) {
             Mage::logException($e);
+            $result = $response->getBody();
         }
 
-        if ($httpCode!=self::HTTP_OK) {
+        if ($response->getStatus()!=self::HTTP_OK) {
             try {
-                Mage::throwException(Mage::helper('social_facebook')->__( 'Error sending message to fabric, HTTP CODE: %s', $httpCode));
+                Mage::throwException(Mage::helper('social_facebook')->__( 'Error sending message to the Social Commerce API, HTTP CODE: %s', $response->getStatus()));
             } catch(Exception $e) {
                 Mage::logException($e);
             }
         }
 
-        return $httpCode;
+        return array($response->getStatus(), $result);
     }
 
     /**
@@ -401,8 +397,6 @@ class Social_Facebook_Model_Api extends Varien_Object
     public function fetchSocialData($productData, $categoryData) {
         $dataObj = new stdClass();
 
-        $schema = 'social.events.product.fetch.json';
-
         $data = array('actions' => Mage::helper('social_facebook')->getAllActions(),
             'url' => Mage::app()->getStore()->getCurrentUrl(false));
 
@@ -435,14 +429,11 @@ class Social_Facebook_Model_Api extends Varien_Object
 
         $data['product_info'] = array('product' => $productData, 'category' => $categoryData);
 
-        $dataObj->social = Mage::helper('core')->jsonEncode($data);
+        $dataObj = Mage::helper('core')->jsonEncode($data);
 
-        $this->makeXcomRequest('/social/events/product/fetch', $dataObj, $schema, true);
+        list($rc, $response) = $this->makeXcomRequest('/social/events/product/fetch', $dataObj);
 
-        $response = $this->getXcomSync()->decode($this->getXcomSync()->getLastResponse(),
-            file_get_contents($this->getSchemaLocation($schema)));
-
-        $json = Mage::helper('core')->jsonDecode($response->social, Zend_Json::TYPE_OBJECT);
+        $json = Mage::helper('core')->jsonDecode($response, Zend_Json::TYPE_OBJECT);
 
         if (empty($json)) {
             return false;

@@ -108,18 +108,10 @@ class Social_Facebook_IndexController extends Mage_Core_Controller_Front_Action
             return;
         }
 
-        if (!extension_loaded('xcommerce')) {
+        if (!Mage::helper('social_facebook')->getSCBearerToken()) {
             $this->getResponse()->setBody(Mage::helper('social_facebook')->__("
                 <strong>[error]</strong> you've enabled the Social Commerce extension
-                but haven't setup the xcommerce PHP extension yet,
-                you can download it at http://pecl.php.net/xcommerce"));
-            return;
-        }
-
-        if (!Mage::helper('social_facebook')->getXcomFabricURL()) {
-            $this->getResponse()->setBody(Mage::helper('social_facebook')->__("
-                <strong>[error]</strong> you've enabled the Social Commerce extension
-                but haven't uploaded a valid X.commerce authorization file yet!"));
+                but haven't provisioned a valid token yet!"));
             return;
         }
 

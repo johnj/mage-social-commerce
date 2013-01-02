@@ -46,13 +46,13 @@ class Social_Facebook_Model_Facebook extends Mage_Core_Model_Abstract
     const XML_PATH_APP_ACTIONS          = 'facebook/config/action';
     const XML_PATH_FABRIC_URL           = 'facebook/config/fabric_url';
     const XML_PATH_CAP_TOKEN            = 'facebook/config/cap_token';
+    const XML_PATH_BEARER_TOKEN         = 'facebook/config/bearer_token';
     const XML_PATH_TENANT_NAME          = 'facebook/config/tenant_name';
     const XML_PATH_RAW_AUTH_JSON        = 'facebook/config/raw_json_auth';
     const XML_PATH_REGISTER_BUTTON      = 'facebook/config/registration_extension_button';
     const ONBOARDING_URL                = '/merchant_onboarding';
     const ONBOARDING_URL_DOMAIN         = 'https://devportal.x.com';
     const NEW_EVENT_TOPIC               = '/social/events/product/new';
-    const NEW_EVENT_SCHEMA              = 'social.events.product.new.json';
 
     protected $_accessToken     = false;
 
@@ -323,7 +323,9 @@ class Social_Facebook_Model_Facebook extends Mage_Core_Model_Abstract
             $dataObj->merchant_info = Mage::helper('core')->jsonEncode($merchantData);
             $dataObj->event_info = Mage::helper('core')->jsonEncode($eventInfo);
 
-            $this->getApi()->makeXcomRequest(self::NEW_EVENT_TOPIC, $dataObj, self::NEW_EVENT_SCHEMA);
+	    $data = Mage::helper('core')->jsonEncode($dataObj);
+
+            $this->getApi()->makeXcomRequest(self::NEW_EVENT_TOPIC, $data);
         } catch (Mage_Core_Exception $e) {
             Mage::getSingleton('core/session')->addError($e->getMessage());
             return false;

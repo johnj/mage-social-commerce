@@ -96,27 +96,16 @@
                             <validate>required-entry</validate>
                             <comment>Create a 'product' (or equivalent) object and associate the actions you want to it at https://developers.facebook.com/</comment>
                         </otype>
-                        <!--<fabric_url translate="label" module="social_facebook">
-                            <validate>validate-url required-entry</validate>
-                            <label>X.Commerce Fabric URL</label>
+                        <bearer_token translate="label" module="social_facebook">
+                            <label>Social Commerce App Secret</label>
                             <frontend_type>text</frontend_type>
+                            <sort_order>21</sort_order>
                             <show_in_default>1</show_in_default>
-                            <show_in_website>0</show_in_website>
+                            <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
-                            <comment>
-                                Sandbox URL: https://api.sandbox.x.com/fabric&lt;br&gt;
-                                Production URL: https://api.x.com/fabric
-                            </comment>
-                        </fabric_url>
-                        <cap_token translate="label" module="social_facebook">
                             <validate>required-entry</validate>
-                            <label>X.Commerce Capability Token</label>
-                            <frontend_type>text</frontend_type>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>0</show_in_website>
-                            <show_in_store>0</show_in_store>
-                            <required>1</required>
-                        </cap_token>-->
+                            <comment><![CDATA[You can provision this @ <strong>https://sc.jawed.name/</strong>]]></comment>
+                        </bearer_token>
                         <action translate="comment">
                             <label>Actions Settings</label>
                             <frontend_model>social_facebook/adminhtml_facebuttons</frontend_model>
@@ -127,35 +116,6 @@
                             <show_in_store>1</show_in_store>
                             <comment>Add the actions that you want. These need to be approved by Facebook (usually within 24 hours) before non-developers of your application can use them.</comment>
                         </action>
-                        <auth_file_upload translate="label">
-                            <frontend_type>file</frontend_type>
-                            <backend_model>social_facebook/system_config_backend_authorization</backend_model>
-                            <label>X.commerce Authorization File</label>
-                            <sort_order>22</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>0</show_in_website>
-                            <show_in_store>0</show_in_store>
-                        </auth_file_upload>
-                        <registration_extension_button traslate="button_label comment">
-                            <label/>
-                            <frontend_model>social_facebook/adminhtml_system_form_renderer_config_registerButton</frontend_model>
-                            <button_label>Generate an X.commerce Authorization File</button_label>
-                            <sort_order>21</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>0</show_in_website>
-                            <show_in_store>0</show_in_store>
-                            <comment><![CDATA[Click the button above to generate an X.Commerce authorization file if you don't have one.]]></comment>
-                        </registration_extension_button>
-                        <authorize_extension_button traslate="button_label comment">
-                            <label/>
-                            <frontend_model>social_facebook/adminhtml_system_form_renderer_config_authButton</frontend_model>
-                            <button_label>Authorize the Social Commerce Extension</button_label>
-                            <sort_order>22</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>0</show_in_website>
-                            <show_in_store>0</show_in_store>
-                            <comment><![CDATA[After you upload your authorization file from x.com you'll need to authorize this extension (<strong>make sure you're logged out of x.com before each of these steps</strong>).]]></comment>
-                        </authorize_extension_button>
                     </fields>
                 </config>
             </groups>

@@ -115,6 +115,16 @@ class Social_Facebook_Helper_Data extends Mage_Core_Helper_Abstract
     }
 
      /**
+      * Get the bearer token
+      *
+      * @return string
+      */
+    public function getSCBearerToken()
+    {
+        return Mage::getStoreConfig(Social_Facebook_Model_Facebook::XML_PATH_BEARER_TOKEN);
+    }
+
+     /**
       * Get Facebook Actions
       *
       * @return string
