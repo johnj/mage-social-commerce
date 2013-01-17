@@ -59,10 +59,13 @@ class Social_Facebook_Block_Head extends Mage_Core_Block_Template
                 'property'  => 'og:image',
                 'content'   => $this->escapeHtml(Mage::helper('catalog/image')->init($product, 'image')->resize(256))
             );
-            $tags[] = array(
-                'property'  => 'og:description',
-                'content'   => $this->escapeHtml($product->getShortDescription())
-            );
+
+            if($product->getShortDescription()!=$product->getName()) {
+                $tags[] = array(
+                        'property'  => 'og:description',
+                        'content'   => $this->escapeHtml($product->getShortDescription())
+                        );
+            }
             $tags[] = array(
                 'property'  => $helper->getAppName(). ':price',
                 'content'   => Mage::helper('core')->currency($product->getFinalPrice(), true, false)
