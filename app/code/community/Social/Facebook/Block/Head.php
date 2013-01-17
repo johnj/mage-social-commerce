@@ -66,6 +66,7 @@ class Social_Facebook_Block_Head extends Mage_Core_Block_Template
                         'content'   => $this->escapeHtml($product->getShortDescription())
                         );
             }
+
             $tags[] = array(
                 'property'  => $helper->getAppName(). ':price',
                 'content'   => Mage::helper('core')->currency($product->getFinalPrice(), true, false)

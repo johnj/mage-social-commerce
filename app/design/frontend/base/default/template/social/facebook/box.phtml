@@ -44,7 +44,7 @@ $actions = $this->getAllActions();
             <?php foreach($this->getFriendBox($action['action']) as $facebookId => $facebookName): ?>
                 <div class="facebookUser">
                     <a href="https://www.facebook.com/<?php echo $facebookId?>" target="_blank">
-                    <img border="0" src="http://graph.facebook.com/<?php echo $facebookId?>/picture" alt="<?php $this->escapeHtml($facebookName)?>" title="<?php $this->escapeHtml($facebookName)?>" class="facebookUserImg">
+                    <img border="0" src="<?php if(Mage::app()->getFrontController()->getRequest()->isSecure()) { echo 'https'; } else { echo 'http'; } ?>://graph.facebook.com/<?php echo $facebookId?>/picture" alt="<?php $this->escapeHtml($facebookName)?>" title="<?php $this->escapeHtml($facebookName)?>" class="facebookUserImg">
                     <span title="<?php echo $this->escapeHtml($facebookName)?>"><?php echo $this->escapeHtml($facebookName)?></span>
                     </a>
                 </div>
