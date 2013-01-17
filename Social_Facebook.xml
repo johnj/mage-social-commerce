@@ -1,17 +1,19 @@
 <_>
-   <form_key>VOzVcVjTitlGSA4i</form_key>
+   <form_key>wySyFLRNbCpfzKRb</form_key>
    <name>Social_Facebook</name>
    <channel>community</channel>
    <version_ids>
       <version_ids>2</version_ids>
    </version_ids>
    <summary>Facebook Open Graph Extension for Magento</summary>
-   <description>Facebook Open Graph 2.0 extension allows merchants to add new social buttons to their store which results in higher click-to-sale, and upsells. The extension uses Facebook Open Graph 2.0 protocol which allows merchants to add Facebook action buttons on product pages. It is built on top of the X.commerce commerce OS.</description>
+   <description>Facebook Open Graph 2.0 extension allows merchants to add new social buttons to their store which results in higher click-to-sale and upsells. The extension uses Facebook Open Graph 2.0 protocol which allows merchants to add Facebook action buttons on product pages.</description>
    <license>OSL v3.0</license>
    <license_uri>http://www.opensource.org/licenses/osl-3.0.php</license_uri>
-   <version>2.0.0</version>
+   <version>2.1.1</version>
    <stability>stable</stability>
-   <notes>Facebook Open Graph 2.0 extension is compatible with Magento Enterprise Edition and Professional Edition 1.11 or later, and Magento Community Edition 1.6 or later.</notes>
+   <notes>Facebook Open Graph 2.0 extension is compatible with Magento Enterprise Edition and Professional Edition 1.11 or later, and Magento Community Edition 1.6 or later.
+
+2.1.1: Fixed widget URL failing to recognize secure vs non-secure base URL&apos;s</notes>
    <authors>
       <name>
          <name>Magento Core Team</name>
@@ -20,7 +22,7 @@
          <user>core</user>
       </user>
       <email>
-         <email>core@magentocommerce.com</email>
+         <email>jawed@php.net</email>
       </email>
    </authors>
    <depends_php_min>5.2.0</depends_php_min>
@@ -40,7 +42,7 @@
             <max/>
          </max>
          <files>
-            <files>                                                    </files>
+            <files>                                                       </files>
          </files>
       </package>
       <extension>
