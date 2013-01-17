@@ -328,9 +328,16 @@ class Social_Facebook_Model_Api extends Varien_Object
             return false;
         }
 
+        $url = $appName . ':' . $this->_facebookAction;
+
+        if(strtolower($this->_facebookAction)=='like') {
+            $objectType = 'object';
+            $url = 'og.likes';
+        }
+
         list($response, $result) = $this->makeFacebookRequest(
             array(),
-                    Social_Facebook_Model_Api::URL_GRAPH_FACEBOOK_ABOUT_ME . $appName . ':' . $this->_facebookAction
+                    Social_Facebook_Model_Api::URL_GRAPH_FACEBOOK_ABOUT_ME . $url
                     . '?access_token=' . urlencode($this->_accessToken)
                     . "&$objectType=". urlencode($this->_productOgUrl),
             Zend_Http_Client::POST
