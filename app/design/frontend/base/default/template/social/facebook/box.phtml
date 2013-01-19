@@ -35,9 +35,9 @@ $actions = $this->getAllActions();
         <div class="facebookFriendsBox">
             <div class="facebookActionBanner">
                 <?php if ($this->getCountOfUsers($action['action']) == 1): ?>
-                    <?php echo $this->__('one of your friends <strong>%s</strong> this product', $this->escapeHtml($action['action'])); ?>
+                    <?php echo $this->__('one of your friends <strong>%s</strong> this product', $this->escapeHtml($action['title'])); ?>
                 <?php else: ?>
-                    <?php echo $this->__('%s of your friends <strong>%s</strong> this product', $this->getCountOfUsers($action['action']), $this->escapeHtml($action['action'])) ?>
+                    <?php echo $this->__('%s of your friends <strong>%s</strong> this product', $this->getCountOfUsers($action['action']), $this->escapeHtml($action['title'])) ?>
                 <?php endif; ?>
             </div>
             <div style="clear:both;"></div>
