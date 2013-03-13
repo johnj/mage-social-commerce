@@ -44,6 +44,7 @@ class Social_Facebook_Model_Api extends Varien_Object
     private $_Xcom              = false;
     private $_XcomSync          = false;
     private $_social_data       = NULL;
+    static private $_exchanged_code = false;
 
 
     /**
@@ -242,7 +243,7 @@ class Social_Facebook_Model_Api extends Varien_Object
      */
     public function getAccessToken()
     {
-        if (empty($this->_facebookCode)) {
+        if (empty($this->_facebookCode) || !empty(self::$_exchanged_code)) {
             return false;
         }
 
@@ -260,6 +261,8 @@ class Social_Facebook_Model_Api extends Varien_Object
             Social_Facebook_Model_Api::URL_GRAPH_OAUTH_ACCESS_TOKEN,
             Zend_Http_Client::GET
         );
+
+	self::$_exchanged_code = true;
 
         $params = null;
         parse_str($result[1], $params);
