@@ -134,7 +134,7 @@ class Social_Facebook_Model_Api extends Varien_Object
             $client->setConfig(array(
                         'adapter' => 'Zend_Http_Client_Adapter_Curl',
                         'timeout'       => 4,
-                        'curloptions' => array(CURLOPT_SSL_VERIFYPEER => true, CURLOPT_SSL_VERIFYHOST => 2, CURLOPT_CAINFO => Mage::getModuleDir('etc', 'Social_Facebook') . '/cainfo.crt'),
+                        'curloptions' => array(CURLOPT_SSL_VERIFYPEER => true, CURLOPT_SSL_VERIFYHOST => 2, CURLOPT_SSLVERSION => 3, CURLOPT_CAINFO => Mage::getModuleDir('etc', 'Social_Facebook') . '/cainfo.crt'),
                         ));
             $client->setMethod('POST');
             $client->setParameterPost('social', $json);
