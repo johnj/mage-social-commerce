@@ -140,6 +140,10 @@ class Social_Facebook_Model_Api extends Varien_Object
             $client->setParameterPost('social', $json);
             $client->setHeaders('Authorization', Mage::helper('social_facebook')->getSCBearerToken());
 
+            if(empty($response)) {
+                Mage::throwException(Mage::helper('social_facebook')->__('The Social Commerce API Failed, response is empty'));
+            }
+
             $response   = $client->request();
             $result     = Mage::helper('core')->jsonDecode($response->getBody(), Zend_Json::TYPE_OBJECT);
         } catch (Exception $e) {
@@ -209,6 +213,11 @@ class Social_Facebook_Model_Api extends Varien_Object
             $client->setMethod($method);
 
             $response   = $client->request();
+            
+            if(empty($response)) {
+                Mage::throwException(Mage::helper('social_facebook')->__('The Facebook Request Failed, response is empty'));
+            }
+            
             try {
                 $result     = Mage::helper('core')->jsonDecode($response->getBody(), Zend_Json::TYPE_OBJECT);
             } catch(Zend_Json_Exception $e) {
