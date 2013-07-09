@@ -148,7 +148,9 @@ class Social_Facebook_Model_Api extends Varien_Object
             $result     = Mage::helper('core')->jsonDecode($response->getBody(), Zend_Json::TYPE_OBJECT);
         } catch (Exception $e) {
             Mage::logException($e);
-            $result = $response->getBody();
+            if(!empty($response)) {
+               $result = $response->getBody();
+            }
         }
 
         if ($response->getStatus()!=self::HTTP_OK) {
@@ -222,7 +224,9 @@ class Social_Facebook_Model_Api extends Varien_Object
                 $result     = Mage::helper('core')->jsonDecode($response->getBody(), Zend_Json::TYPE_OBJECT);
             } catch(Zend_Json_Exception $e) {
                 /* failed to decode, that's fine, we'll pass through */
-                $result = $response->getBody();
+               if(!empty($response)) {
+                 $result = $response->getBody();
+               }
             }
         } catch (Exception $e) {
             Mage::throwException(Mage::helper('social_facebook')->__('Facebook Request API Error'));
