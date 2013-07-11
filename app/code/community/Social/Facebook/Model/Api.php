@@ -279,7 +279,11 @@ class Social_Facebook_Model_Api extends Varien_Object
 	self::$_exchanged_code = true;
 
         $params = null;
-        parse_str($result[1], $params);
+        if ($result[0] typeof Zend_Http_Response) {
+           parse_str($result[0]->getBody(), $params);
+        } else {
+           parse_str($result[1], $params);
+        }
 
         if (empty($params['access_token'])) {
             return false;
